@@ -8,11 +8,11 @@ import React, { useEffect } from 'react';
 import { Link } from 'umi';
 import { connect } from 'dva';
 import { Icon, Result, Button } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
+// import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/F.png';
 
 const noMatch = (
   <Result
@@ -38,26 +38,20 @@ const menuDataRender = (menuList) =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
+    copyright="2020 EzerWu出品"
     links={[
       {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
+        key: 'Friday',
+        title: 'Friday 家庭理财系统',
+        href: '',
         blankTarget: true,
       },
-      {
-        key: 'github',
-        title: <Icon type="github" />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
-        blankTarget: true,
-      },
+      // {
+      //   key: 'Friday',
+      //   title: 'Friday',
+      //   href: '',
+      //   blankTarget: true,
+      // },
     ]}
   />
 );
@@ -143,11 +137,11 @@ const BasicLayout = (props) => {
       }}
       breadcrumbRender={(routers = []) => [
         {
-          path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-            defaultMessage: 'Home',
-          }),
+          // path: '/',
+          //           // breadcrumbName: formatMessage({
+          //           //   id: 'menu.home',
+          //           //   defaultMessage: 'Home',
+          //           // }),
         },
         ...routers,
       ]}
@@ -161,7 +155,7 @@ const BasicLayout = (props) => {
       }}
       footerRender={footerRender}
       menuDataRender={menuDataRender}
-      formatMessage={formatMessage}
+      // formatMessage={formatMessage}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}

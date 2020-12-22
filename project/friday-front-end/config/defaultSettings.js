@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'Friday',
   pwa: false,
-  iconfontUrl: '',
+  // iconfontUrl: 'line-chart',
 };
