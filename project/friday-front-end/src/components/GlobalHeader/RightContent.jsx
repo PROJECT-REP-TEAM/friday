@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
-import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 const ENVTagColor = {
@@ -48,6 +47,7 @@ const GlobalHeaderRight = (props) => {
           id: 'component.globalHeader.help',
         })}
       >
+        {/*此处修改使用文档地址*/}
         <a
           target="_blank"
           href="https://pro.ant.design/docs/getting-started"
@@ -59,7 +59,7 @@ const GlobalHeaderRight = (props) => {
       </Tooltip>
       <Avatar />
       {REACT_APP_ENV && <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>}
-      <SelectLang className={styles.action} />
+      {/*<SelectLang className={styles.action} />*/}
     </div>
   );
 };

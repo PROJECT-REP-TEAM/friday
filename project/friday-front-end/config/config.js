@@ -106,13 +106,13 @@ export default {
                 {
                   path: '/expenses/ExpensesIndex',
                   name: '支出展示',
-                  icon: 'money-collect',
+                  icon: 'swap-left',
                   component: './friday/expenses/ExpensesIndex',
                 },
                 {
                   path: '/expenses/ExpensesTable',
                   name: '支出详情',
-                  icon: 'money-collect',
+                  icon: 'table',
                   component: './friday/expenses/ExpensesTable',
                 },
               ],
@@ -121,18 +121,18 @@ export default {
             {
               path: '/income',
               name: '收入管理',
-              icon: 'money-collect',
+              icon: 'dollar-circle',
               routes: [
                 {
                   path: '/income/IncomeIndex',
                   name: '收入展示',
-                  icon: 'money-collect',
+                  icon: 'swap-right',
                   component: './friday/income/IncomeIndex',
                 },
                 {
                   path: '/income/IncomeTable',
                   name: '收入详情',
-                  icon: 'money-collect',
+                  icon: 'table',
                   component: './friday/income/IncomeTable',
                 },
               ],
@@ -141,30 +141,30 @@ export default {
             {
               path: '/stockMarket',
               name: '股市',
-              icon: 'money-collect',
+              icon: 'line-chart',
               routes: [
                 {
                   path: '/stockMarket/StockMarketRank',
                   name: '股市排行',
-                  icon: 'money-collect',
+                  icon: 'ordered-list',
                   component: './friday/stockMarket/StockMarketRank',
                 },
                 {
                   path: '/stockMarket/StockMarketDetail',
                   name: '股票详情',
-                  icon: 'money-collect',
+                  icon: 'account-book',
                   component: './friday/stockMarket/StockMarketDetail',
                 },
                 {
                   path: '/stockMarket/StockMarketSort',
                   name: '行业板块',
-                  icon: 'money-collect',
+                  icon: 'appstore',
                   component: './friday/stockMarket/StockMarketSort',
                 },
                 {
                   path: '/stockMarket/StockMarketTable',
                   name: '我的股票',
-                  icon: 'money-collect',
+                  icon: 'transaction',
                   component: './friday/stockMarket/StockMarketTable',
                 },
 
@@ -177,25 +177,25 @@ export default {
             {
               path: '/fund',
               name: '基金',
-              icon: 'money-collect',
+              icon: 'fund',
               routes: [
                 {
                   path: '/fund/FundRank',
                   name: '基金排行',
-                  icon: 'money-collect',
+                  icon: 'sort-descending',
                   component: './friday/fund/FundRank',
                 },
                 {
                   path: '/fund/FundDetail',
                   name: '基金详情',
-                  icon: 'money-collect',
+                  icon: 'highlight',
                   component: './friday/fund/FundDetail',
                 },
 
                 {
                   path: '/fund/MyFundTable',
                   name: '我的基金',
-                  icon: 'money-collect',
+                  icon: 'interaction',
                   component: './friday/fund/MyFundTable',
                 },
               ],
@@ -204,18 +204,18 @@ export default {
             {
               path: '/fixedAssets',
               name: '固定资产',
-              icon: 'money-collect',
+              icon: 'car',
               routes: [
                 {
                   path: '/fixedAssets/FixedAssetsIndex',
                   name: '我的资产',
-                  icon: 'money-collect',
+                  icon: 'property-safety',
                   component: './friday/fixedAssets/FixedAssetsIndex',
                 },
                 {
                   path: '/fixedAssets/FixedAssetsTable',
                   name: '资产详情',
-                  icon: 'money-collect',
+                  icon: 'reconciliation',
                   component: './friday/fixedAssets/FixedAssetsTable',
                 },
               ],
@@ -224,18 +224,18 @@ export default {
             {
               path: '/claimsAndDebts',
               name: '债务债权',
-              icon: 'money-collect',
+              icon: 'red-envelope',
               routes: [
                 {
                   path: '/claimsAndDebts/ClaimsAndDebtsIndex',
                   name: '分类展示',
-                  icon: 'money-collect',
+                  icon: 'cluster',
                   component: './friday/claimsAndDebts/ClaimsAndDebtsIndex',
                 },
                 {
                   path: '/claimsAndDebts/ClaimsAndDebtsTable',
                   name: '债权债务详情',
-                  icon: 'money-collect',
+                  icon: 'credit-card',
                   component: './friday/claimsAndDebts/ClaimsAndDebtsTable',
                 },
               ],

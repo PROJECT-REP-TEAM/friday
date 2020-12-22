@@ -5,12 +5,12 @@ function getFakeCaptcha(req, res) {
 export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': {
-    name: 'Serati Ma',
+    name: 'Ezer Wu',
     avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
     userid: '00000001',
     email: 'antdesign@alipay.com',
     signature: '海纳百川，有容乃大',
-    title: '交互专家',
+    title: 'JAVA工程师',
     group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
     tags: [
       {
@@ -31,7 +31,7 @@ export default {
       },
       {
         key: '4',
-        label: '川妹子',
+        label: '重庆崽儿',
       },
       {
         key: '5',
@@ -43,11 +43,11 @@ export default {
     country: 'China',
     geographic: {
       province: {
-        label: '浙江省',
+        label: '重庆市',
         key: '330000',
       },
       city: {
-        label: '杭州市',
+        label: '南岸区',
         key: '330100',
       },
     },
