@@ -76,6 +76,7 @@ export default class ExpensesIndex extends React.Component{
 
     })
   }
+
   state = {
     visible: false,
   };
