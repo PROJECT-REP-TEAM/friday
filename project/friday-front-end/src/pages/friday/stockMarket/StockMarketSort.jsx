@@ -4,36 +4,52 @@ import reqwest from 'reqwest';
 
 const columns = [
   {
-    title: 'Name',
+    title: '行业代码',
+    dataIndex: 'industryCode',
+    sorter: true,
+  },
+  {
+    title: '行业名称',
     dataIndex: 'name',
     sorter: true,
-    render: name => `${name.first} ${name.last}`,
-    width: '20%',
   },
   {
-    title: 'Gender',
-    dataIndex: 'gender',
-    filters: [{ text: 'Male', value: 'male' }, { text: 'Female', value: 'female' }],
-    width: '20%',
+    title: '平均价格',
+    dataIndex: 'averagePrice',
+    sorter: true,
   },
   {
-    title: 'Email',
-    dataIndex: 'email',
+    title: '涨幅',
+    dataIndex: 'changePercent',
+    sorter: true,
   },
+  {
+    title: '成交量',
+    dataIndex: 'volume',
+    sorter: true,
+  },
+  {
+    title: '成交额',
+    dataIndex: 'turnover',
+    sorter: true,
+  }
 ];
 
 export default class ExpensesIndex extends React.Component{
-  state = {
-    data: [],
-    pagination: {},
-    loading: false,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      pagination: {},
+      loading: false,
+    };
+  }
 
   click(record,rowkey){
 
-    console.log(record);
-
-    console.log(rowkey);
+    console.log(record.industryCode);
+    this.props.history.push({ pathname : '/stockMarket/StockMarketRank' , query : { industryCode : record.industryCode }})
   }
 
 
@@ -44,15 +60,14 @@ export default class ExpensesIndex extends React.Component{
 
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
-    pager.current = pagination.current;
+    // pager.current = pagination.current;
     this.setState({
       pagination: pager,
     });
     this.fetch({
-      results: pagination.pageSize,
-      page: pagination.current,
+      // pageSize: pagination.pageSize,
+      // page: pagination.current,
       sortField: sorter.field,
-      sortOrder: sorter.order,
       ...filters,
     });
   };
@@ -61,22 +76,20 @@ export default class ExpensesIndex extends React.Component{
     console.log('params:', params);
     this.setState({ loading: true });
     reqwest({
-      url: 'https://randomuser.me/api',
+      url: 'https://api.doctorxiong.club/v1/stock/industry/rank',
       method: 'get',
       data: {
-        results: 10,
+        // pageSize: 10,
+        // sort:"r",
         ...params,
       },
       type: 'json',
     }).then(data => {
       const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
+      // pagination.total = data.allPages;
       this.setState({
         loading: false,
-        data: data.results,
-        pagination,
+        data: data.data,
       });
     });
   };
@@ -85,7 +98,7 @@ export default class ExpensesIndex extends React.Component{
     return (
       <Table
         columns={columns}
-        rowKey={record => record.login.uuid}
+        rowKey="industryCode"
         dataSource={this.state.data}
         pagination={this.state.pagination}
         loading={this.state.loading}

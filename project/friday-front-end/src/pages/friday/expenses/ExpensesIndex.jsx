@@ -144,8 +144,8 @@ export default class ExpensesIndex extends React.Component{
           </Descriptions>
         </PageHeader>
         <div style={{width:'100%'}}>
-          <div id="spendingCurve" style={{width:'45%',height : '30rem',margin : '2rem',float : 'left',minWidth:'300px'}}></div>
-          <div id="spendingGroup" style={{width:'45%',height : '30rem',margin : '2rem', float : 'right',minWidth:'300px'}}></div>
+          <div id="spendingCurve" style={{width:'45%',height : '30rem',marginTop : '1rem',float : 'left',minWidth:'300px'}}></div>
+          <div id="spendingGroup" style={{width:'45%',height : '30rem',marginTop : '1rem', float : 'right',minWidth:'300px'}}></div>
         </div>
 
       </div>

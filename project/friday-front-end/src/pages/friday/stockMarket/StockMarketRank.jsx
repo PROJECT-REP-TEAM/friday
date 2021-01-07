@@ -25,15 +25,22 @@ const columns = [
     title: '买入价格',
     dataIndex: 'buy',
     sorter: true,
+    render: buy => `${buy[0]}`,
   },{
     title: '卖出价格',
-    dataIndex: 'shell',
+    dataIndex: 'sell',
     sorter: true,
+    render: sell => `${sell[0]}`,
   },{
     title: '最高价格',
-    dataIndex: '最低价格',
+    dataIndex: 'high',
     sorter: true,
   },{
+    title: '最低价格',
+    dataIndex: 'low',
+    sorter: true,
+  },
+  {
     title: '成交量',
     dataIndex: 'volume',
     sorter: true,
@@ -44,23 +51,42 @@ const columns = [
   },
 ];
 
+
+let param = {
+  sort : 'turnover',
+  node : 'a'
+};
 const { Option } = Select;
 
 function handleChange(value) {
   console.log(value); // { key: "lucy", label: "Lucy (101)" }
+  param.sort = value.key
+}
+
+function changeType(value) {
+  console.log(value); // { key: "lucy", label: "Lucy (101)" }
+  param.node = value.key
 }
 
 export default class ExpensesIndex extends React.Component{
-
-  state = {
-    data: [],
-    pagination: {},
-    loading: false,
-  };
+  constructor(props) {
+    super(props);
+    const params = new URLSearchParams(this.props.location.search);
+    let industryCode = params.get("industryCode") != null ? params.get("industryCode") : "111111";
+    this.state = {
+      industryCode:industryCode,
+      data: [],
+      pagination: {},
+      loading: false,
+    };
+  }
 
   componentDidMount() {
     this.fetch();
   }
+
+
+
 
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
@@ -77,7 +103,7 @@ export default class ExpensesIndex extends React.Component{
   };
 
   fetch = (params = {}) => {
-    console.log('params:', params);
+    console.log('params:', param);
     this.setState({ loading: true });
     reqwest({
       url: 'https://api.doctorxiong.club/v1/stock/rank',
@@ -89,15 +115,16 @@ export default class ExpensesIndex extends React.Component{
       data: JSON.stringify(
         {
           pageSize: 10,
-          sort: 'turnover',
+          pageIndex: 1,
+          sort: param.sort,
+          node: param.node,
+          industryCode:this.state.industryCode == "111111" ? null : this.state.industryCode,
           ...params,
         }
       ),
       type: 'json',
     }).then(data => {
       const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
       pagination.total = data.data.allPages;
       this.setState({
         loading: false,
@@ -109,12 +136,15 @@ export default class ExpensesIndex extends React.Component{
 
 
   click(record,rowkey){
-
-    console.log(record);
-
-    console.log(rowkey);
+    console.log(record.code);
+    this.props.history.push({ pathname : '/stockMarket/StockMarketDetail' , query : { code : record.code }})
   }
 
+  searchStock(sort, node) {
+    param.sort = sort;
+    param.node = node;
+    this.fetch(param)
+  }
 
   render() {
     return(
@@ -125,12 +155,16 @@ export default class ExpensesIndex extends React.Component{
             <label>股票类型:</label>
             <Select
               labelInValue
-              defaultValue={{ key: 'lucy' }}
+              defaultValue={{ key: '沪深A股' }}
               style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
-              onChange={handleChange}
+              onChange={changeType}
             >
-              <Option value="jack">Jack (100)</Option>
-              <Option value="lucy">Lucy (101)</Option>
+              <Option value="a">沪深A股</Option>
+              <Option value="b">沪市A股</Option>
+              <Option value="ash">深市A股</Option>
+              <Option value="asz">沪深B股</Option>
+              <Option value="bsh">沪市B股</Option>
+              <Option value="bsz">深市B股</Option>
             </Select>
             </div>
 
@@ -138,28 +172,26 @@ export default class ExpensesIndex extends React.Component{
               <label>排序方式:</label>
             <Select
               labelInValue
-              defaultValue={{ key: 'lucy' }}
+              defaultValue={{ key: '成交额' }}
               style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap'}}
               onChange={handleChange}
             >
-              <Option value="jack">Jack (100)</Option>
-              <Option value="lucy">Lucy (101)</Option>
+              <Option value="price">价格</Option>
+              <Option value="changePercent">涨幅比例</Option>
+              <Option value="buy">买入价格</Option>
+              <Option value="sell">卖出价格</Option>
+              <Option value="open">开盘价格</Option>
+              <Option value="close">收盘价格</Option>
+              <Option value="high">最高价</Option>
+              <Option value="low">最低价</Option>
+              <Option value="volume">成交量</Option>
+              <Option value="turnover">成交额</Option>
             </Select>
             </div>
 
             <div style={{display : 'inline',whiteSpace:'nowrap'}}>
-            <label>板块行业:</label>
-            <Select
-              labelInValue
-              defaultValue={{ key: 'lucy' }}
-              style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
-              onChange={handleChange}
-            >
-              <Option value="jack">Jack (100)</Option>
-              <Option value="lucy">Lucy (101)</Option>
-            </Select>
             </div>
-            <Button icon="search" type="primary">Search</Button>
+            <Button icon="search" type="primary" onClick={() => this.searchStock(param.sort, param.node)}>Search</Button>
           </Col>
 
           <Col span = {4}>
@@ -182,4 +214,6 @@ export default class ExpensesIndex extends React.Component{
       </div>
     )
   }
+
+
 }
