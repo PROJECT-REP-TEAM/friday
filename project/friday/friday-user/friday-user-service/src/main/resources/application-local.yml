@@ -4,7 +4,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mysql:///leyou?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql:///friday?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: friday
@@ -17,4 +17,4 @@ eureka:
       defaultZone: http://127.0.0.1:10086/eureka
   instance:
     lease-renewal-interval-in-seconds: 5 # 5秒钟发送一次心跳
-    lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
+    lease-expiration-duration-in-seconds: 15 # 10秒不发送就过期

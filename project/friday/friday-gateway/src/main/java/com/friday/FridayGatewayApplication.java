@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableZuulProxy
-
 public class FridayGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(FridayGatewayApplication.class,args);

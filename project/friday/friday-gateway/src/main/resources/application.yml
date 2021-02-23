@@ -2,7 +2,7 @@ server:
   port: 10010
 spring:
   application:
-    name: leyou-gateway
+    name: friday-gateway
 eureka:
   client:
     registry-fetch-interval-seconds: 5
@@ -11,4 +11,4 @@ eureka:
 zuul:
   prefix: /friday # 路由路径前缀
   routes:
-    item-service: /user/** # 用户微服务的映射路径
+    user-service: /user/** # 用户微服务的映射路径
