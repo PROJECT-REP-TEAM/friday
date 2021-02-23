@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.friday.equity.mapper.ClaimsAndDebtMapper">
+
+    <resultMap type="com.friday.equity.entity.ClaimsAndDebt" id="ClaimsAndDebtMap">
+        <result property="cadId" column="CAD_id" jdbcType="INTEGER"/>
+        <result property="cadType" column="CAD_type" jdbcType="VARCHAR"/>
+        <result property="creditor" column="creditor" jdbcType="VARCHAR"/>
+        <result property="obligor" column="obligor" jdbcType="VARCHAR"/>
+        <result property="cadNum" column="CAD_num" jdbcType="VARCHAR"/>
+        <result property="cadTime" column="CAD_time" jdbcType="VARCHAR"/>
+        <result property="cadRepay" column="CAD_repay" jdbcType="VARCHAR"/>
+        <result property="cadPlan" column="CAD_plan" jdbcType="VARCHAR"/>
+        <result property="cadRemark" column="CAD_remark" jdbcType="VARCHAR"/>
+        <result property="cadStatus" column="CAD_status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ClaimsAndDebtMap">
+        select
+          CAD_id, CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status
+        from friday.claims_and_debt
+        where CAD_id = #{cadId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ClaimsAndDebtMap">
+        select
+          CAD_id, CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status
+        from friday.claims_and_debt
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ClaimsAndDebtMap">
+        select
+          CAD_id, CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status
+        from friday.claims_and_debt
+        <where>
+            <if test="cadId != null">
+                and CAD_id = #{cadId}
+            </if>
+            <if test="cadType != null and cadType != ''">
+                and CAD_type = #{cadType}
+            </if>
+            <if test="creditor != null and creditor != ''">
+                and creditor = #{creditor}
+            </if>
+            <if test="obligor != null and obligor != ''">
+                and obligor = #{obligor}
+            </if>
+            <if test="cadNum != null and cadNum != ''">
+                and CAD_num = #{cadNum}
+            </if>
+            <if test="cadTime != null and cadTime != ''">
+                and CAD_time = #{cadTime}
+            </if>
+            <if test="cadRepay != null and cadRepay != ''">
+                and CAD_repay = #{cadRepay}
+            </if>
+            <if test="cadPlan != null and cadPlan != ''">
+                and CAD_plan = #{cadPlan}
+            </if>
+            <if test="cadRemark != null and cadRemark != ''">
+                and CAD_remark = #{cadRemark}
+            </if>
+            <if test="cadStatus != null and cadStatus != ''">
+                and CAD_status = #{cadStatus}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="cadId" useGeneratedKeys="true">
+        insert into friday.claims_and_debt(CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status)
+        values (#{cadType}, #{creditor}, #{obligor}, #{cadNum}, #{cadTime}, #{cadRepay}, #{cadPlan}, #{cadRemark}, #{cadStatus})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update friday.claims_and_debt
+        <set>
+            <if test="cadType != null and cadType != ''">
+                CAD_type = #{cadType},
+            </if>
+            <if test="creditor != null and creditor != ''">
+                creditor = #{creditor},
+            </if>
+            <if test="obligor != null and obligor != ''">
+                obligor = #{obligor},
+            </if>
+            <if test="cadNum != null and cadNum != ''">
+                CAD_num = #{cadNum},
+            </if>
+            <if test="cadTime != null and cadTime != ''">
+                CAD_time = #{cadTime},
+            </if>
+            <if test="cadRepay != null and cadRepay != ''">
+                CAD_repay = #{cadRepay},
+            </if>
+            <if test="cadPlan != null and cadPlan != ''">
+                CAD_plan = #{cadPlan},
+            </if>
+            <if test="cadRemark != null and cadRemark != ''">
+                CAD_remark = #{cadRemark},
+            </if>
+            <if test="cadStatus != null and cadStatus != ''">
+                CAD_status = #{cadStatus},
+            </if>
+        </set>
+        where CAD_id = #{cadId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from friday.claims_and_debt where CAD_id = #{cadId}
+    </delete>
+
+</mapper>

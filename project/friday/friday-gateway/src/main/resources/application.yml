@@ -12,3 +12,7 @@ zuul:
   prefix: /friday # 路由路径前缀
   routes:
     user-service: /user/** # 用户微服务的映射路径
+    bills-service: /bills/** # 账单微服务映射路径
+    finance-service: /finance/** #债券与股票微服务
+    equity-service: /equity/** #固定资产与债务
+    report-service: /report/** #报表微服务

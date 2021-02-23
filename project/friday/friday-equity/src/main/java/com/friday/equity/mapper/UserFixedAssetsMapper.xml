@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.friday.equity.mapper.UserFixedAssetsMapper">
+
+    <resultMap type="com.friday.equity.entity.UserFixedAssets" id="UserFixedAssetsMap">
+        <result property="fixedId" column="fixed_id" jdbcType="INTEGER"/>
+        <result property="fixedName" column="fixed_name" jdbcType="VARCHAR"/>
+        <result property="fixedLocation" column="fixed_location" jdbcType="VARCHAR"/>
+        <result property="fixedCreateTime" column="fixed_create_time" jdbcType="VARCHAR"/>
+        <result property="fixedOwner" column="fixed_owner" jdbcType="VARCHAR"/>
+        <result property="fixedInstalment" column="fixed_instalment" jdbcType="VARCHAR"/>
+        <result property="instalmentPrice" column="instalment_price" jdbcType="VARCHAR"/>
+        <result property="instalmentSurplus" column="instalment_surplus" jdbcType="VARCHAR"/>
+        <result property="fixedRemark" column="fixed_remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserFixedAssetsMap">
+        select
+          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+        from friday.user_fixed_assets
+        where fixed_id = #{fixedId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserFixedAssetsMap">
+        select
+          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+        from friday.user_fixed_assets
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserFixedAssetsMap">
+        select
+          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+        from friday.user_fixed_assets
+        <where>
+            <if test="fixedId != null">
+                and fixed_id = #{fixedId}
+            </if>
+            <if test="fixedName != null and fixedName != ''">
+                and fixed_name = #{fixedName}
+            </if>
+            <if test="fixedLocation != null and fixedLocation != ''">
+                and fixed_location = #{fixedLocation}
+            </if>
+            <if test="fixedCreateTime != null and fixedCreateTime != ''">
+                and fixed_create_time = #{fixedCreateTime}
+            </if>
+            <if test="fixedOwner != null and fixedOwner != ''">
+                and fixed_owner = #{fixedOwner}
+            </if>
+            <if test="fixedInstalment != null and fixedInstalment != ''">
+                and fixed_instalment = #{fixedInstalment}
+            </if>
+            <if test="instalmentPrice != null and instalmentPrice != ''">
+                and instalment_price = #{instalmentPrice}
+            </if>
+            <if test="instalmentSurplus != null and instalmentSurplus != ''">
+                and instalment_surplus = #{instalmentSurplus}
+            </if>
+            <if test="fixedRemark != null and fixedRemark != ''">
+                and fixed_remark = #{fixedRemark}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="fixedId" useGeneratedKeys="true">
+        insert into friday.user_fixed_assets(fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark)
+        values (#{fixedName}, #{fixedLocation}, #{fixedCreateTime}, #{fixedOwner}, #{fixedInstalment}, #{instalmentPrice}, #{instalmentSurplus}, #{fixedRemark})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update friday.user_fixed_assets
+        <set>
+            <if test="fixedName != null and fixedName != ''">
+                fixed_name = #{fixedName},
+            </if>
+            <if test="fixedLocation != null and fixedLocation != ''">
+                fixed_location = #{fixedLocation},
+            </if>
+            <if test="fixedCreateTime != null and fixedCreateTime != ''">
+                fixed_create_time = #{fixedCreateTime},
+            </if>
+            <if test="fixedOwner != null and fixedOwner != ''">
+                fixed_owner = #{fixedOwner},
+            </if>
+            <if test="fixedInstalment != null and fixedInstalment != ''">
+                fixed_instalment = #{fixedInstalment},
+            </if>
+            <if test="instalmentPrice != null and instalmentPrice != ''">
+                instalment_price = #{instalmentPrice},
+            </if>
+            <if test="instalmentSurplus != null and instalmentSurplus != ''">
+                instalment_surplus = #{instalmentSurplus},
+            </if>
+            <if test="fixedRemark != null and fixedRemark != ''">
+                fixed_remark = #{fixedRemark},
+            </if>
+        </set>
+        where fixed_id = #{fixedId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from friday.user_fixed_assets where fixed_id = #{fixedId}
+    </delete>
+
+</mapper>

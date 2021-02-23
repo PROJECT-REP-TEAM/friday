@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.friday.bills.mapper.UserIncomeMapper">
+
+    <resultMap type="com.friday.bills.entity.UserIncome" id="UserIncomeMap">
+        <result property="incomeId" column="income_id" jdbcType="INTEGER"/>
+        <result property="incomeTime" column="income_time" jdbcType="VARCHAR"/>
+        <result property="incomeNum" column="income_num" jdbcType="VARCHAR"/>
+        <result property="incomeSort" column="income_sort" jdbcType="VARCHAR"/>
+        <result property="incomeRemark" column="income_remark" jdbcType="VARCHAR"/>
+        <result property="incomeUserId" column="income_user_id" jdbcType="INTEGER"/>
+        <result property="incomeUser" column="income_user" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserIncomeMap">
+        select
+          income_id, income_time, income_num, income_sort, income_remark, income_user_id, income_user
+        from friday.user_income
+        where income_id = #{incomeId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserIncomeMap">
+        select
+          income_id, income_time, income_num, income_sort, income_remark, income_user_id, income_user
+        from friday.user_income
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserIncomeMap">
+        select
+          income_id, income_time, income_num, income_sort, income_remark, income_user_id, income_user
+        from friday.user_income
+        <where>
+            <if test="incomeId != null">
+                and income_id = #{incomeId}
+            </if>
+            <if test="incomeTime != null and incomeTime != ''">
+                and income_time = #{incomeTime}
+            </if>
+            <if test="incomeNum != null and incomeNum != ''">
+                and income_num = #{incomeNum}
+            </if>
+            <if test="incomeSort != null and incomeSort != ''">
+                and income_sort = #{incomeSort}
+            </if>
+            <if test="incomeRemark != null and incomeRemark != ''">
+                and income_remark = #{incomeRemark}
+            </if>
+            <if test="incomeUserId != null">
+                and income_user_id = #{incomeUserId}
+            </if>
+            <if test="incomeUser != null and incomeUser != ''">
+                and income_user = #{incomeUser}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="incomeId" useGeneratedKeys="true">
+        insert into friday.user_income(income_time, income_num, income_sort, income_remark, income_user_id, income_user)
+        values (#{incomeTime}, #{incomeNum}, #{incomeSort}, #{incomeRemark}, #{incomeUserId}, #{incomeUser})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update friday.user_income
+        <set>
+            <if test="incomeTime != null and incomeTime != ''">
+                income_time = #{incomeTime},
+            </if>
+            <if test="incomeNum != null and incomeNum != ''">
+                income_num = #{incomeNum},
+            </if>
+            <if test="incomeSort != null and incomeSort != ''">
+                income_sort = #{incomeSort},
+            </if>
+            <if test="incomeRemark != null and incomeRemark != ''">
+                income_remark = #{incomeRemark},
+            </if>
+            <if test="incomeUserId != null">
+                income_user_id = #{incomeUserId},
+            </if>
+            <if test="incomeUser != null and incomeUser != ''">
+                income_user = #{incomeUser},
+            </if>
+        </set>
+        where income_id = #{incomeId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from friday.user_income where income_id = #{incomeId}
+    </delete>
+
+</mapper>

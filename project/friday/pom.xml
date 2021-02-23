@@ -13,6 +13,10 @@
         <module>friday-gateway</module>
         <module>friday-user</module>
         <module>friday-common</module>
+        <module>friday-bills</module>
+        <module>friday-finance</module>
+        <module>friday-equity</module>
+        <module>friday-report</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
