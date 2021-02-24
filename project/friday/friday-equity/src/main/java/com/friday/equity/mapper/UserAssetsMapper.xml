@@ -3,29 +3,29 @@
 <mapper namespace="com.friday.equity.mapper.UserAssetsMapper">
 
     <resultMap type="com.friday.equity.entity.UserAssets" id="UserAssetsMap">
-        <result property="fixedId" column="fixed_id" jdbcType="INTEGER"/>
-        <result property="fixedName" column="fixed_name" jdbcType="VARCHAR"/>
-        <result property="fixedLocation" column="fixed_location" jdbcType="VARCHAR"/>
-        <result property="fixedCreateTime" column="fixed_create_time" jdbcType="VARCHAR"/>
-        <result property="fixedOwner" column="fixed_owner" jdbcType="VARCHAR"/>
-        <result property="fixedInstalment" column="fixed_instalment" jdbcType="VARCHAR"/>
+        <result property="assetsId" column="assets_id" jdbcType="INTEGER"/>
+        <result property="assetsName" column="assets_name" jdbcType="VARCHAR"/>
+        <result property="assetsLocation" column="assets_location" jdbcType="VARCHAR"/>
+        <result property="assetsCreateTime" column="assets_create_time" jdbcType="VARCHAR"/>
+        <result property="assetsOwner" column="assets_owner" jdbcType="VARCHAR"/>
+        <result property="assetsInstalment" column="assets_instalment" jdbcType="VARCHAR"/>
         <result property="instalmentPrice" column="instalment_price" jdbcType="VARCHAR"/>
         <result property="instalmentSurplus" column="instalment_surplus" jdbcType="VARCHAR"/>
-        <result property="fixedRemark" column="fixed_remark" jdbcType="VARCHAR"/>
+        <result property="assetsRemark" column="assets_remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="UserAssetsMap">
         select
-          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+          assets_id, assets_name, assets_location, assets_create_time, assets_owner, assets_instalment, instalment_price, instalment_surplus, assets_remark
         from friday.user_assets
-        where fixed_id = #{fixedId}
+        where assets_id = #{assetsId}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="UserAssetsMap">
         select
-          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+          assets_id, assets_name, assets_location, assets_create_time, assets_owner, assets_instalment, instalment_price, instalment_surplus, assets_remark
         from friday.user_assets
         limit #{offset}, #{limit}
     </select>
@@ -33,26 +33,26 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserAssetsMap">
         select
-          fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
+          assets_id, assets_name, assets_location, assets_create_time, assets_owner, assets_instalment, instalment_price, instalment_surplus, assets_remark
         from friday.user_assets
         <where>
-            <if test="fixedId != null">
-                and fixed_id = #{fixedId}
+            <if test="assetsId != null">
+                and assets_id = #{assetsId}
             </if>
-            <if test="fixedName != null and fixedName != ''">
-                and fixed_name = #{fixedName}
+            <if test="assetsName != null and assetsName != ''">
+                and assets_name = #{assetsName}
             </if>
-            <if test="fixedLocation != null and fixedLocation != ''">
-                and fixed_location = #{fixedLocation}
+            <if test="assetsLocation != null and assetsLocation != ''">
+                and assets_location = #{assetsLocation}
             </if>
-            <if test="fixedCreateTime != null and fixedCreateTime != ''">
-                and fixed_create_time = #{fixedCreateTime}
+            <if test="assetsCreateTime != null and assetsCreateTime != ''">
+                and assets_create_time = #{assetsCreateTime}
             </if>
-            <if test="fixedOwner != null and fixedOwner != ''">
-                and fixed_owner = #{fixedOwner}
+            <if test="assetsOwner != null and assetsOwner != ''">
+                and assets_owner = #{assetsOwner}
             </if>
-            <if test="fixedInstalment != null and fixedInstalment != ''">
-                and fixed_instalment = #{fixedInstalment}
+            <if test="assetsInstalment != null and assetsInstalment != ''">
+                and assets_instalment = #{assetsInstalment}
             </if>
             <if test="instalmentPrice != null and instalmentPrice != ''">
                 and instalment_price = #{instalmentPrice}
@@ -60,36 +60,36 @@
             <if test="instalmentSurplus != null and instalmentSurplus != ''">
                 and instalment_surplus = #{instalmentSurplus}
             </if>
-            <if test="fixedRemark != null and fixedRemark != ''">
-                and fixed_remark = #{fixedRemark}
+            <if test="assetsRemark != null and assetsRemark != ''">
+                and assets_remark = #{assetsRemark}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="fixedId" useGeneratedKeys="true">
-        insert into friday.user_assets(fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark)
-        values (#{fixedName}, #{fixedLocation}, #{fixedCreateTime}, #{fixedOwner}, #{fixedInstalment}, #{instalmentPrice}, #{instalmentSurplus}, #{fixedRemark})
+    <insert id="insert" keyProperty="assetsId" useGeneratedKeys="true">
+        insert into friday.user_assets(assets_name, assets_location, assets_create_time, assets_owner, assets_instalment, instalment_price, instalment_surplus, assets_remark)
+        values (#{assetsName}, #{assetsLocation}, #{assetsCreateTime}, #{assetsOwner}, #{assetsInstalment}, #{instalmentPrice}, #{instalmentSurplus}, #{assetsRemark})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
         update friday.user_assets
         <set>
-            <if test="fixedName != null and fixedName != ''">
-                fixed_name = #{fixedName},
+            <if test="assetsName != null and assetsName != ''">
+                assets_name = #{assetsName},
             </if>
-            <if test="fixedLocation != null and fixedLocation != ''">
-                fixed_location = #{fixedLocation},
+            <if test="assetsLocation != null and assetsLocation != ''">
+                assets_location = #{assetsLocation},
             </if>
-            <if test="fixedCreateTime != null and fixedCreateTime != ''">
-                fixed_create_time = #{fixedCreateTime},
+            <if test="assetsCreateTime != null and assetsCreateTime != ''">
+                assets_create_time = #{assetsCreateTime},
             </if>
-            <if test="fixedOwner != null and fixedOwner != ''">
-                fixed_owner = #{fixedOwner},
+            <if test="assetsOwner != null and assetsOwner != ''">
+                assets_owner = #{assetsOwner},
             </if>
-            <if test="fixedInstalment != null and fixedInstalment != ''">
-                fixed_instalment = #{fixedInstalment},
+            <if test="assetsInstalment != null and assetsInstalment != ''">
+                assets_instalment = #{assetsInstalment},
             </if>
             <if test="instalmentPrice != null and instalmentPrice != ''">
                 instalment_price = #{instalmentPrice},
@@ -97,16 +97,16 @@
             <if test="instalmentSurplus != null and instalmentSurplus != ''">
                 instalment_surplus = #{instalmentSurplus},
             </if>
-            <if test="fixedRemark != null and fixedRemark != ''">
-                fixed_remark = #{fixedRemark},
+            <if test="assetsRemark != null and assetsRemark != ''">
+                assets_remark = #{assetsRemark},
             </if>
         </set>
-        where fixed_id = #{fixedId}
+        where assets_id = #{assetsId}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from friday.user_assets where fixed_id = #{fixedId}
+        delete from friday.user_assets where assets_id = #{assetsId}
     </delete>
 
 </mapper>

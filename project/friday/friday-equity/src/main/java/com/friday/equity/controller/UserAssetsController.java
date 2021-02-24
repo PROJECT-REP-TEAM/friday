@@ -10,7 +10,7 @@ import javax.annotation.Resource;
  * (UserAssets)表控制层
  *
  * @author makejava
- * @since 2021-02-24 15:18:24
+ * @since 2021-02-24 16:10:10
  */
 @RestController
 @RequestMapping("userAssets")

@@ -8,17 +8,17 @@ import java.util.List;
  * (UserAssets)表数据库访问层
  *
  * @author makejava
- * @since 2021-02-24 15:18:24
+ * @since 2021-02-24 16:09:59
  */
 public interface UserAssetsMapper {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param fixedId 主键
+     * @param assetsId 主键
      * @return 实例对象
      */
-    UserAssets queryById(Integer fixedId);
+    UserAssets queryById(Integer assetsId);
 
     /**
      * 查询指定行数据
@@ -57,9 +57,9 @@ public interface UserAssetsMapper {
     /**
      * 通过主键删除数据
      *
-     * @param fixedId 主键
+     * @param assetsId 主键
      * @return 影响行数
      */
-    int deleteById(Integer fixedId);
+    int deleteById(Integer assetsId);
 
 }

@@ -6,34 +6,34 @@ import java.io.Serializable;
  * (UserAssets)实体类
  *
  * @author makejava
- * @since 2021-02-24 15:18:24
+ * @since 2021-02-24 16:09:59
  */
 public class UserAssets implements Serializable {
-    private static final long serialVersionUID = -77578662808574486L;
+    private static final long serialVersionUID = -69796075334981986L;
     /**
     * 资产id主键
     */
-    private Integer fixedId;
+    private Integer assetsId;
     /**
     * 资产名
     */
-    private String fixedName;
+    private String assetsName;
     /**
     * 资产所在地
     */
-    private String fixedLocation;
+    private String assetsLocation;
     /**
     * 资产获得时间
     */
-    private String fixedCreateTime;
+    private String assetsCreateTime;
     /**
     * 资产所有者
     */
-    private String fixedOwner;
+    private String assetsOwner;
     /**
     * 资产分期（可没有）
     */
-    private String fixedInstalment;
+    private String assetsInstalment;
     /**
     * 每期价格
     */
@@ -45,55 +45,55 @@ public class UserAssets implements Serializable {
     /**
     * 备注
     */
-    private String fixedRemark;
+    private String assetsRemark;
 
 
-    public Integer getFixedId() {
-        return fixedId;
+    public Integer getAssetsId() {
+        return assetsId;
     }
 
-    public void setFixedId(Integer fixedId) {
-        this.fixedId = fixedId;
+    public void setAssetsId(Integer assetsId) {
+        this.assetsId = assetsId;
     }
 
-    public String getFixedName() {
-        return fixedName;
+    public String getAssetsName() {
+        return assetsName;
     }
 
-    public void setFixedName(String fixedName) {
-        this.fixedName = fixedName;
+    public void setAssetsName(String assetsName) {
+        this.assetsName = assetsName;
     }
 
-    public String getFixedLocation() {
-        return fixedLocation;
+    public String getAssetsLocation() {
+        return assetsLocation;
     }
 
-    public void setFixedLocation(String fixedLocation) {
-        this.fixedLocation = fixedLocation;
+    public void setAssetsLocation(String assetsLocation) {
+        this.assetsLocation = assetsLocation;
     }
 
-    public String getFixedCreateTime() {
-        return fixedCreateTime;
+    public String getAssetsCreateTime() {
+        return assetsCreateTime;
     }
 
-    public void setFixedCreateTime(String fixedCreateTime) {
-        this.fixedCreateTime = fixedCreateTime;
+    public void setAssetsCreateTime(String assetsCreateTime) {
+        this.assetsCreateTime = assetsCreateTime;
     }
 
-    public String getFixedOwner() {
-        return fixedOwner;
+    public String getAssetsOwner() {
+        return assetsOwner;
     }
 
-    public void setFixedOwner(String fixedOwner) {
-        this.fixedOwner = fixedOwner;
+    public void setAssetsOwner(String assetsOwner) {
+        this.assetsOwner = assetsOwner;
     }
 
-    public String getFixedInstalment() {
-        return fixedInstalment;
+    public String getAssetsInstalment() {
+        return assetsInstalment;
     }
 
-    public void setFixedInstalment(String fixedInstalment) {
-        this.fixedInstalment = fixedInstalment;
+    public void setAssetsInstalment(String assetsInstalment) {
+        this.assetsInstalment = assetsInstalment;
     }
 
     public String getInstalmentPrice() {
@@ -112,12 +112,12 @@ public class UserAssets implements Serializable {
         this.instalmentSurplus = instalmentSurplus;
     }
 
-    public String getFixedRemark() {
-        return fixedRemark;
+    public String getAssetsRemark() {
+        return assetsRemark;
     }
 
-    public void setFixedRemark(String fixedRemark) {
-        this.fixedRemark = fixedRemark;
+    public void setAssetsRemark(String assetsRemark) {
+        this.assetsRemark = assetsRemark;
     }
 
 }
