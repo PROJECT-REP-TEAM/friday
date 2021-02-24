@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.friday.equity.mapper.UserFixedAssetsMapper">
+<mapper namespace="com.friday.equity.mapper.UserAssetsMapper">
 
-    <resultMap type="com.friday.equity.entity.UserFixedAssets" id="UserFixedAssetsMap">
+    <resultMap type="com.friday.equity.entity.UserAssets" id="UserAssetsMap">
         <result property="fixedId" column="fixed_id" jdbcType="INTEGER"/>
         <result property="fixedName" column="fixed_name" jdbcType="VARCHAR"/>
         <result property="fixedLocation" column="fixed_location" jdbcType="VARCHAR"/>
@@ -15,26 +15,26 @@
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="UserFixedAssetsMap">
+    <select id="queryById" resultMap="UserAssetsMap">
         select
           fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
-        from friday.user_fixed_assets
+        from friday.user_assets
         where fixed_id = #{fixedId}
     </select>
 
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserFixedAssetsMap">
+    <select id="queryAllByLimit" resultMap="UserAssetsMap">
         select
           fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
-        from friday.user_fixed_assets
+        from friday.user_assets
         limit #{offset}, #{limit}
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="UserFixedAssetsMap">
+    <select id="queryAll" resultMap="UserAssetsMap">
         select
           fixed_id, fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark
-        from friday.user_fixed_assets
+        from friday.user_assets
         <where>
             <if test="fixedId != null">
                 and fixed_id = #{fixedId}
@@ -68,13 +68,13 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="fixedId" useGeneratedKeys="true">
-        insert into friday.user_fixed_assets(fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark)
+        insert into friday.user_assets(fixed_name, fixed_location, fixed_create_time, fixed_owner, fixed_instalment, instalment_price, instalment_surplus, fixed_remark)
         values (#{fixedName}, #{fixedLocation}, #{fixedCreateTime}, #{fixedOwner}, #{fixedInstalment}, #{instalmentPrice}, #{instalmentSurplus}, #{fixedRemark})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
-        update friday.user_fixed_assets
+        update friday.user_assets
         <set>
             <if test="fixedName != null and fixedName != ''">
                 fixed_name = #{fixedName},
@@ -106,7 +106,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from friday.user_fixed_assets where fixed_id = #{fixedId}
+        delete from friday.user_assets where fixed_id = #{fixedId}
     </delete>
 
 </mapper>

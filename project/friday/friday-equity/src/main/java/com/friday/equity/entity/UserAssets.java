@@ -3,13 +3,13 @@ package com.friday.equity.entity;
 import java.io.Serializable;
 
 /**
- * (UserFixedAssets)实体类
+ * (UserAssets)实体类
  *
  * @author makejava
- * @since 2021-02-23 16:14:02
+ * @since 2021-02-24 15:18:24
  */
-public class UserFixedAssets implements Serializable {
-    private static final long serialVersionUID = 760053559862097187L;
+public class UserAssets implements Serializable {
+    private static final long serialVersionUID = -77578662808574486L;
     /**
     * 资产id主键
     */
