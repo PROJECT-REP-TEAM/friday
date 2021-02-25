@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (UserStock)实体类
  *
  * @author makejava
- * @since 2021-02-23 15:57:57
+ * @since 2021-02-25 16:34:00
  */
 public class UserStock implements Serializable {
-    private static final long serialVersionUID = -88719501411204449L;
+    private static final long serialVersionUID = -41559956484674479L;
     /**
     * 行id，主键
     */
@@ -120,4 +120,23 @@ public class UserStock implements Serializable {
         this.stockUserId = stockUserId;
     }
 
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

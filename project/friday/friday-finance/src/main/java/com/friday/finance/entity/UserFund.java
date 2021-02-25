@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (UserFund)实体类
  *
  * @author makejava
- * @since 2021-02-23 15:55:31
+ * @since 2021-02-25 16:32:31
  */
 public class UserFund implements Serializable {
-    private static final long serialVersionUID = -32986990216821128L;
+    private static final long serialVersionUID = 414505981135630738L;
     /**
     * 基金自增交易ID
     */
@@ -120,4 +120,23 @@ public class UserFund implements Serializable {
         this.millionCopiesIncome = millionCopiesIncome;
     }
 
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

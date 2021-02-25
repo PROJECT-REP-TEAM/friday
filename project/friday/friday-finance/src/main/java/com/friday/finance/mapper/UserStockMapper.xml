@@ -22,13 +22,6 @@
         where stock_id = #{stockId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserStockMap">
-        select
-          stock_id, stock_code, stock_name, stock_type, stock_price, stock_num, stock_time, stock_user, stock_user_id
-        from friday.user_stock
-        limit #{offset}, #{limit}
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserStockMap">

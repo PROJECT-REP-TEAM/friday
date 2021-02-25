@@ -8,7 +8,7 @@ import java.util.List;
  * (UserStock)表数据库访问层
  *
  * @author makejava
- * @since 2021-02-23 15:57:57
+ * @since 2021-02-25 16:34:00
  */
 public interface UserStockMapper {
 
@@ -20,14 +20,6 @@ public interface UserStockMapper {
      */
     UserStock queryById(Integer stockId);
 
-    /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<UserStock> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**

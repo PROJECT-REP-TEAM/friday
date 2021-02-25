@@ -23,13 +23,6 @@
         where CAD_id = #{cadId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="ClaimsAndDebtMap">
-        select
-          CAD_id, CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status
-        from friday.claims_and_debt
-        limit #{offset}, #{limit}
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="ClaimsAndDebtMap">

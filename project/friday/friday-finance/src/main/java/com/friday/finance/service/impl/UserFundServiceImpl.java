@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (UserFund)表服务实现类
  *
  * @author makejava
- * @since 2021-02-23 15:55:33
+ * @since 2021-02-25 16:32:31
  */
 @Service("userFundService")
 public class UserFundServiceImpl implements UserFundService {
@@ -29,18 +31,21 @@ public class UserFundServiceImpl implements UserFundService {
     public UserFund queryById(Integer fundId) {
         return this.userFundMapper.queryById(fundId);
     }
-
-    /**
-     * 查询多条数据
+    
+     /**
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param userFund
+     * @return 实例对象列表
      */
-    @Override
-    public List<UserFund> queryAllByLimit(int offset, int limit) {
-        return this.userFundMapper.queryAllByLimit(offset, limit);
+     @Override
+    public PageInfo<UserFund> queryAllByEntity(UserFund userFund) {
+        PageHelper.startPage(userFund.getOffset(),userFund.getLimit());
+        List<UserFund> queryAll = userFundMapper.queryAll(userFund);
+        PageInfo<UserFund> pageInfo = new PageInfo<>(queryAll);
+        return pageInfo;
     }
+
 
     /**
      * 新增数据

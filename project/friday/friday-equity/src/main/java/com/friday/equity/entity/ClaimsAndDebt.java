@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (ClaimsAndDebt)实体类
  *
  * @author makejava
- * @since 2021-02-23 16:14:49
+ * @since 2021-02-25 16:29:59
  */
 public class ClaimsAndDebt implements Serializable {
-    private static final long serialVersionUID = -54612230758341797L;
+    private static final long serialVersionUID = 623626798802566986L;
     /**
     * 资产负债ID
     */
@@ -132,4 +132,23 @@ public class ClaimsAndDebt implements Serializable {
         this.cadStatus = cadStatus;
     }
 
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

@@ -1,56 +1,56 @@
 package com.friday.equity.service;
 
-import com.friday.equity.entity.ClaimsAndDebt;
+import com.friday.equity.entity.UserAssets;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 /**
- * (ClaimsAndDebt)表服务接口
+ * (UserAssets)表服务接口
  *
  * @author makejava
- * @since 2021-02-25 16:29:59
+ * @since 2021-02-25 16:31:20
  */
-public interface ClaimsAndDebtService {
+public interface UserAssetsService {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param cadId 主键
+     * @param assetsId 主键
      * @return 实例对象
      */
-    ClaimsAndDebt queryById(Integer cadId);
+    UserAssets queryById(Integer assetsId);
 
     /**
      * 通过实体类查询分页数据
      *
-     * @param claimsAndDebt
+     * @param userAssets
      * @return 实例对象列表
      */
-    PageInfo<ClaimsAndDebt> queryAllByEntity(ClaimsAndDebt claimsAndDebt);
+    PageInfo<UserAssets> queryAllByEntity(UserAssets userAssets);
 
     /**
      * 新增数据
      *
-     * @param claimsAndDebt 实例对象
+     * @param userAssets 实例对象
      * @return 实例对象
      */
-    ClaimsAndDebt insert(ClaimsAndDebt claimsAndDebt);
+    UserAssets insert(UserAssets userAssets);
 
     /**
      * 修改数据
      *
-     * @param claimsAndDebt 实例对象
+     * @param userAssets 实例对象
      * @return 实例对象
      */
-    ClaimsAndDebt update(ClaimsAndDebt claimsAndDebt);
+    UserAssets update(UserAssets userAssets);
 
     /**
      * 通过主键删除数据
      *
-     * @param cadId 主键
+     * @param assetsId 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer cadId);
+    boolean deleteById(Integer assetsId);
 
 }

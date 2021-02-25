@@ -2,12 +2,14 @@ package com.friday.finance.service;
 
 import com.friday.finance.entity.UserStock;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (UserStock)表服务接口
  *
  * @author makejava
- * @since 2021-02-23 15:57:57
+ * @since 2021-02-25 16:34:00
  */
 public interface UserStockService {
 
@@ -20,13 +22,12 @@ public interface UserStockService {
     UserStock queryById(Integer stockId);
 
     /**
-     * 查询多条数据
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param userStock
+     * @return 实例对象列表
      */
-    List<UserStock> queryAllByLimit(int offset, int limit);
+    PageInfo<UserStock> queryAllByEntity(UserStock userStock);
 
     /**
      * 新增数据

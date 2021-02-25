@@ -8,7 +8,7 @@ import java.util.List;
  * (ClaimsAndDebt)表数据库访问层
  *
  * @author makejava
- * @since 2021-02-23 16:14:49
+ * @since 2021-02-25 16:29:59
  */
 public interface ClaimsAndDebtMapper {
 
@@ -20,14 +20,6 @@ public interface ClaimsAndDebtMapper {
      */
     ClaimsAndDebt queryById(Integer cadId);
 
-    /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<ClaimsAndDebt> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**

@@ -22,13 +22,6 @@
         where assets_id = #{assetsId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserAssetsMap">
-        select
-          assets_id, assets_name, assets_location, assets_create_time, assets_owner, assets_instalment, instalment_price, instalment_surplus, assets_remark
-        from friday.user_assets
-        limit #{offset}, #{limit}
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserAssetsMap">

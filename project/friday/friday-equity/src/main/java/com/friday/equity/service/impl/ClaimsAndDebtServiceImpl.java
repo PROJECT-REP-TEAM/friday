@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (ClaimsAndDebt)表服务实现类
  *
  * @author makejava
- * @since 2021-02-23 16:14:49
+ * @since 2021-02-25 16:29:59
  */
 @Service("claimsAndDebtService")
 public class ClaimsAndDebtServiceImpl implements ClaimsAndDebtService {
@@ -29,18 +31,21 @@ public class ClaimsAndDebtServiceImpl implements ClaimsAndDebtService {
     public ClaimsAndDebt queryById(Integer cadId) {
         return this.claimsAndDebtMapper.queryById(cadId);
     }
-
-    /**
-     * 查询多条数据
+    
+     /**
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param claimsAndDebt
+     * @return 实例对象列表
      */
-    @Override
-    public List<ClaimsAndDebt> queryAllByLimit(int offset, int limit) {
-        return this.claimsAndDebtMapper.queryAllByLimit(offset, limit);
+     @Override
+    public PageInfo<ClaimsAndDebt> queryAllByEntity(ClaimsAndDebt claimsAndDebt) {
+        PageHelper.startPage(claimsAndDebt.getOffset(),claimsAndDebt.getLimit());
+        List<ClaimsAndDebt> queryAll = claimsAndDebtMapper.queryAll(claimsAndDebt);
+        PageInfo<ClaimsAndDebt> pageInfo = new PageInfo<>(queryAll);
+        return pageInfo;
     }
+
 
     /**
      * 新增数据

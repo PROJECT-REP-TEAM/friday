@@ -22,13 +22,6 @@
         where fund_id = #{fundId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserFundMap">
-        select
-          fund_id, fund_code, fund_name, fund_type, net_worth, buy_source_rate, buy_rate, manager, million_copies_income
-        from friday.user_fund
-        limit #{offset}, #{limit}
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserFundMap">

@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (UserAssets)实体类
  *
  * @author makejava
- * @since 2021-02-24 16:09:59
+ * @since 2021-02-25 16:31:20
  */
 public class UserAssets implements Serializable {
-    private static final long serialVersionUID = -69796075334981986L;
+    private static final long serialVersionUID = 279634980415656606L;
     /**
     * 资产id主键
     */
@@ -120,4 +120,23 @@ public class UserAssets implements Serializable {
         this.assetsRemark = assetsRemark;
     }
 
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

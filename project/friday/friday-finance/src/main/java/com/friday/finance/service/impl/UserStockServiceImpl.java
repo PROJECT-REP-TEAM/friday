@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (UserStock)表服务实现类
  *
  * @author makejava
- * @since 2021-02-23 15:57:57
+ * @since 2021-02-25 16:34:00
  */
 @Service("userStockService")
 public class UserStockServiceImpl implements UserStockService {
@@ -29,18 +31,21 @@ public class UserStockServiceImpl implements UserStockService {
     public UserStock queryById(Integer stockId) {
         return this.userStockMapper.queryById(stockId);
     }
-
-    /**
-     * 查询多条数据
+    
+     /**
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param userStock
+     * @return 实例对象列表
      */
-    @Override
-    public List<UserStock> queryAllByLimit(int offset, int limit) {
-        return this.userStockMapper.queryAllByLimit(offset, limit);
+     @Override
+    public PageInfo<UserStock> queryAllByEntity(UserStock userStock) {
+        PageHelper.startPage(userStock.getOffset(),userStock.getLimit());
+        List<UserStock> queryAll = userStockMapper.queryAll(userStock);
+        PageInfo<UserStock> pageInfo = new PageInfo<>(queryAll);
+        return pageInfo;
     }
+
 
     /**
      * 新增数据

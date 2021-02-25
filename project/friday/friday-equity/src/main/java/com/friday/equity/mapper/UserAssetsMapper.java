@@ -8,7 +8,7 @@ import java.util.List;
  * (UserAssets)表数据库访问层
  *
  * @author makejava
- * @since 2021-02-24 16:09:59
+ * @since 2021-02-25 16:31:20
  */
 public interface UserAssetsMapper {
 
@@ -20,14 +20,6 @@ public interface UserAssetsMapper {
      */
     UserAssets queryById(Integer assetsId);
 
-    /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<UserAssets> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**
