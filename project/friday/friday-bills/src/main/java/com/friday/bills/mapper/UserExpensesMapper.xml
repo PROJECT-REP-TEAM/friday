@@ -20,13 +20,6 @@
         where expenses_id = #{expensesId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserExpensesMap">
-        select
-          expenses_id, expenses_time, expenses_num, expenses_sort, expenses_remark, expenses_user_id, expenses_user
-        from friday.user_expenses
-        limit #{offset}, #{limit}
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserExpensesMap">

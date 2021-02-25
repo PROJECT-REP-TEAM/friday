@@ -1,5 +1,7 @@
 package com.friday.bills.entity;
 
+import com.friday.common.entity.Page;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * @author makejava
  * @since 2021-02-23 15:10:01
  */
-public class UserIncome implements Serializable {
+public class UserIncome  implements Serializable {
     private static final long serialVersionUID = -80246787635708730L;
     /**
     * 主键，收入id
@@ -38,6 +40,27 @@ public class UserIncome implements Serializable {
     * 收入者名字
     */
     private String incomeUser;
+
+
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 
 
     public Integer getIncomeId() {

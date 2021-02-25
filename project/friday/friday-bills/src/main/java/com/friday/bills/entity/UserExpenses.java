@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (UserExpenses)实体类
  *
  * @author makejava
- * @since 2021-02-23 15:16:45
+ * @since 2021-02-25 15:25:47
  */
 public class UserExpenses implements Serializable {
-    private static final long serialVersionUID = 122246008054573748L;
+    private static final long serialVersionUID = 256986404254744568L;
     /**
     * 主键
     */
@@ -96,4 +96,23 @@ public class UserExpenses implements Serializable {
         this.expensesUser = expensesUser;
     }
 
+    private Integer offset;
+
+    private Integer limit;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

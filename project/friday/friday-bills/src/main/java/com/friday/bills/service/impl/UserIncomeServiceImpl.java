@@ -3,6 +3,9 @@ package com.friday.bills.service.impl;
 import com.friday.bills.entity.UserIncome;
 import com.friday.bills.mapper.UserIncomeMapper;
 import com.friday.bills.service.UserIncomeService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +18,7 @@ import java.util.List;
  * @since 2021-02-23 15:10:05
  */
 @Service("userIncomeService")
+@Log4j
 public class UserIncomeServiceImpl implements UserIncomeService {
     @Resource
     private UserIncomeMapper userIncomeMapper;
@@ -31,15 +35,17 @@ public class UserIncomeServiceImpl implements UserIncomeService {
     }
 
     /**
-     * 查询多条数据
+     * 通过实体作为筛选条件查询
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param userIncome 实例对象
      * @return 对象列表
      */
     @Override
-    public List<UserIncome> queryAllByLimit(int offset, int limit) {
-        return this.userIncomeMapper.queryAllByLimit(offset, limit);
+    public PageInfo<UserIncome> queryAllByEntity(UserIncome userIncome) {
+        PageHelper.startPage(userIncome.getOffset(),userIncome.getLimit());
+        List<UserIncome> queryAll = userIncomeMapper.queryAll(userIncome);
+        PageInfo<UserIncome> pageInfo = new PageInfo<>(queryAll);
+        return pageInfo;
     }
 
     /**

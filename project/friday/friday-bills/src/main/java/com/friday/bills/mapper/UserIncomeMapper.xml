@@ -20,14 +20,6 @@
         where income_id = #{incomeId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UserIncomeMap">
-        select
-          income_id, income_time, income_num, income_sort, income_remark, income_user_id, income_user
-        from friday.user_income
-        limit #{offset}, #{limit}
-    </select>
-
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserIncomeMap">
         select

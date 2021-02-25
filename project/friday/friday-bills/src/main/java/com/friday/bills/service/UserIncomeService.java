@@ -1,6 +1,8 @@
 package com.friday.bills.service;
 
 import com.friday.bills.entity.UserIncome;
+import com.github.pagehelper.PageInfo;
+
 import java.util.List;
 
 /**
@@ -19,14 +21,14 @@ public interface UserIncomeService {
      */
     UserIncome queryById(Integer incomeId);
 
+
     /**
-     * 查询多条数据
+     * 通过实体作为筛选条件查询
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param userIncome 实例对象
      * @return 对象列表
      */
-    List<UserIncome> queryAllByLimit(int offset, int limit);
+    PageInfo<UserIncome> queryAllByEntity(UserIncome userIncome);
 
     /**
      * 新增数据

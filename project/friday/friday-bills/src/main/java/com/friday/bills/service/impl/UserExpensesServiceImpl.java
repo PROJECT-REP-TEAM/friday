@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (UserExpenses)表服务实现类
  *
  * @author makejava
- * @since 2021-02-23 15:16:45
+ * @since 2021-02-25 15:25:47
  */
 @Service("userExpensesService")
 public class UserExpensesServiceImpl implements UserExpensesService {
@@ -29,18 +31,21 @@ public class UserExpensesServiceImpl implements UserExpensesService {
     public UserExpenses queryById(Integer expensesId) {
         return this.userExpensesMapper.queryById(expensesId);
     }
-
-    /**
-     * 查询多条数据
+    
+     /**
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param userExpenses
+     * @return 实例对象列表
      */
-    @Override
-    public List<UserExpenses> queryAllByLimit(int offset, int limit) {
-        return this.userExpensesMapper.queryAllByLimit(offset, limit);
+     @Override
+    public PageInfo<UserExpenses> queryAllByEntity(UserExpenses userExpenses) {
+        PageHelper.startPage(userExpenses.getOffset(),userExpenses.getLimit());
+        List<UserExpenses> queryAll = userExpensesMapper.queryAll(userExpenses);
+        PageInfo<UserExpenses> pageInfo = new PageInfo<>(queryAll);
+        return pageInfo;
     }
+
 
     /**
      * 新增数据

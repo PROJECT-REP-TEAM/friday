@@ -2,12 +2,14 @@ package com.friday.bills.service;
 
 import com.friday.bills.entity.UserExpenses;
 import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * (UserExpenses)表服务接口
  *
  * @author makejava
- * @since 2021-02-23 15:16:45
+ * @since 2021-02-25 15:25:47
  */
 public interface UserExpensesService {
 
@@ -20,13 +22,12 @@ public interface UserExpensesService {
     UserExpenses queryById(Integer expensesId);
 
     /**
-     * 查询多条数据
+     * 通过实体类查询分页数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param userExpenses
+     * @return 实例对象列表
      */
-    List<UserExpenses> queryAllByLimit(int offset, int limit);
+    PageInfo<UserExpenses> queryAllByEntity(UserExpenses userExpenses);
 
     /**
      * 新增数据
