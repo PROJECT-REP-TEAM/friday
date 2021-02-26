@@ -10,6 +10,11 @@ import java.io.Serializable;
  */
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 958506210919059476L;
+
+    public UserInfo(Integer userId, String username) {
+        this.userId = userId;
+        this.username = username;
+    }
     /**
     * 主键,用户id
     */
