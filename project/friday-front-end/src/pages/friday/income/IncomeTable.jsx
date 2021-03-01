@@ -1,17 +1,37 @@
 import React from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Col, Row, DatePicker } from 'antd';
 import Button from "antd/es/button";
+import { connect } from 'dva';
 
+const namespace = 'selectAll';
+const data = {
+  incomeId:'',
 
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+  incomeTime:'',
+
+  incomeNum:'',
+
+  incomeSort:'',
+
+  incomeRemark:'',
+
+  incomeUserId:'',
+
+  incomeUser:'',
+
+  offset:'',
+
+  limit:'',
+};
+// for (let i = 0; i < 100; i++) {
+//   data.push({
+//     key: i.toString(),
+//     name: `Edrward ${i}`,
+//     age: 32,
+//     address: `London Park no. ${i}`,
+//   });
+// }
+
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -59,29 +79,50 @@ class EditableCell extends React.Component {
   }
 }
 
+@connect(({ Income }) => ({
+  ...Income,
+}))
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data, editingKey: '' };
     this.columns = [
       {
-        title: 'name',
-        dataIndex: 'name',
-        width: '25%',
+        title: 'incomeId',
+        dataIndex: 'incomeId',
         editable: true,
       },
       {
-        title: 'age',
-        dataIndex: 'age',
-        width: '15%',
+        title: 'incomeTime',
+        dataIndex: 'incomeTime',
         editable: true,
       },
       {
-        title: 'address',
-        dataIndex: 'address',
-        width: '40%',
+        title: 'incomeNum',
+        dataIndex: 'incomeNum',
         editable: true,
       },
+      {
+        title: 'incomeSort',
+        dataIndex: 'incomeSort',
+        editable: true,
+      },
+      {
+        title: 'incomeRemark',
+        dataIndex: 'incomeRemark',
+        editable: true,
+      },
+      {
+        title: 'incomeUserId',
+        dataIndex: 'incomeUserId',
+        editable: true,
+      },
+      {
+        title: 'incomeUser',
+        dataIndex: 'incomeUser',
+        editable: true,
+      },
+
       {
         title: 'operation',
         dataIndex: 'operation',
@@ -123,6 +164,34 @@ class EditableTable extends React.Component {
     ];
   }
 
+  //传后端值
+  // componentDidMount() {
+  //   this.props.dispatch({
+  //     type: `${namespace}/selectAll`,
+  //     payload: {
+  //       offset: '1',
+  //       limit: '10',
+  //     },
+  //     callback: (data) => {
+  //       if(data.state){
+  //         if(data.data.length > 0) {
+  //           this.setState({data  : data.data});
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+  // 连接models层
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'Income/selectAll',
+      payload: {
+        offset: '1',
+        limit: '10',
+      },
+    });
+  }
   isEditing = record => record.key === this.state.editingKey;
 
   cancel = () => {
@@ -159,6 +228,7 @@ class EditableTable extends React.Component {
   }
 
   render() {
+    const { data } = this.props;
     const components = {
       body: {
         cell: EditableCell,
@@ -186,7 +256,7 @@ class EditableTable extends React.Component {
         <Table
           components={components}
           bordered
-          dataSource={this.state.data}
+          dataSource={data}
           columns={columns}
           rowClassName="editable-row"
           pagination={{
@@ -205,6 +275,9 @@ const {  RangePicker } = DatePicker;
 function onChange(date, dateString) {
   console.log(date, dateString);
 }
+
+
+
 export default class IncomeTable extends React.Component{
 
   render() {
