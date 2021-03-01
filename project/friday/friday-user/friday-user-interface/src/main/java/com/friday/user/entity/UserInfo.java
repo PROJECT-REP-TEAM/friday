@@ -11,9 +11,9 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 958506210919059476L;
 
-    public UserInfo(Integer userId, String username) {
+    public UserInfo(Integer userId, String userName) {
         this.userId = userId;
-        this.username = username;
+        this.userName = userName;
     }
     /**
     * 主键,用户id
@@ -22,7 +22,7 @@ public class UserInfo implements Serializable {
     /**
     * 用户名
     */
-    private String username;
+    private String userName;
     /**
     * 密码
     */
@@ -61,12 +61,12 @@ public class UserInfo implements Serializable {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUserPassword() {

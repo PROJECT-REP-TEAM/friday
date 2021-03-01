@@ -76,4 +76,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     public boolean deleteById(Integer userId) {
         return this.userInfoMapper.deleteById(userId) > 0;
     }
+
+    @Override
+    public UserInfo queryUser(String username, String password) {
+        UserInfo userInfo = userInfoMapper.selectOne(username);
+        return null;
+    }
 }
