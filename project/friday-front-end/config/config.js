@@ -298,7 +298,14 @@ export default {
   manifest: {
     basePath: '/',
   },
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  proxy: {
+    '/api/': {
+      target: 'http://localhost:10010',
+      changeOrigin: true,
+      pathRewrite: { '^/api/': '' },
+    },
+  },
+
   chainWebpack: webpackPlugin,
 };
 

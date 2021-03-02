@@ -1,10 +1,10 @@
-import { selectAll } from "../../../models/friday/bills/Income";
+import { selectAll } from "@/services/friday/bills/Income";
 
 export default {
-  namespace: "selectAll",
+  namespace: "incomeMSG",
 
   state: {
-    data: {}
+    data: []
   },
 
   effects: {
@@ -18,7 +18,7 @@ export default {
       const response = yield call(selectAll, payload);
       yield put({
         // 这行对应下面的reducers处理函数名字
-        type: "save",
+        type: "queryIncome",
         payload: response
       });
     }
@@ -31,7 +31,7 @@ export default {
      * @param action
      * @returns {{[p: string]: *}}
      */
-    save(state, action) {
+    queryIncome(state, action) {
       return {
         ...state,
         data: action.payload

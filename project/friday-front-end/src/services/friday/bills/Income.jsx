@@ -3,7 +3,7 @@ import { stringify } from "qs";
 import request from "@/utils/request";
 
 export async function selectAll(params) {
-  return request(`/api/bills/userIncome/selectAll?${stringify(params)}`,{
+  return request(`/api/friday/bills/userIncome/selectAll?${stringify(params)}`,{
     method:"GET"
   });
 }

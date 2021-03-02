@@ -3,35 +3,7 @@ import { Table, Input, InputNumber, Popconfirm, Form, Col, Row, DatePicker } fro
 import Button from "antd/es/button";
 import { connect } from 'dva';
 
-const namespace = 'selectAll';
-const data = {
-  incomeId:'',
-
-  incomeTime:'',
-
-  incomeNum:'',
-
-  incomeSort:'',
-
-  incomeRemark:'',
-
-  incomeUserId:'',
-
-  incomeUser:'',
-
-  offset:'',
-
-  limit:'',
-};
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i.toString(),
-//     name: `Edrward ${i}`,
-//     age: 32,
-//     address: `London Park no. ${i}`,
-//   });
-// }
-
+const namespace = 'incomeMSG';
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -79,52 +51,54 @@ class EditableCell extends React.Component {
   }
 }
 
-@connect(({ Income }) => ({
-  ...Income,
+@connect(({ incomeMSG, loading }) => ({
+  data: incomeMSG.data, // 将data赋值给
+  loading: loading
 }))
+
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data, editingKey: '' };
+    this.state = { editingKey: '' };
     this.columns = [
       {
-        title: 'incomeId',
+        title: '编号',
         dataIndex: 'incomeId',
         editable: true,
       },
       {
-        title: 'incomeTime',
+        title: '收入时间',
         dataIndex: 'incomeTime',
         editable: true,
       },
       {
-        title: 'incomeNum',
+        title: '收入数额',
         dataIndex: 'incomeNum',
         editable: true,
       },
       {
-        title: 'incomeSort',
+        title: '收入分类',
         dataIndex: 'incomeSort',
         editable: true,
       },
       {
-        title: 'incomeRemark',
+        title: '备注',
         dataIndex: 'incomeRemark',
         editable: true,
       },
       {
-        title: 'incomeUserId',
+        title: '收入人员ID',
         dataIndex: 'incomeUserId',
         editable: true,
       },
       {
-        title: 'incomeUser',
+        title: '收入人',
         dataIndex: 'incomeUser',
         editable: true,
       },
 
       {
-        title: 'operation',
+        title: '操作',
         dataIndex: 'operation',
         render: (text, record) => {
           const { editingKey } = this.state;
@@ -134,24 +108,24 @@ class EditableTable extends React.Component {
               <EditableContext.Consumer>
                 {form => (
                   <a
-                    onClick={() => this.save(form, record.key)}
+                    onClick={() => this.save(form, record.incomeId)}
                     style={{ marginRight: 8 }}
                   >
                     保存
                   </a>
                 )}
               </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
+              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.incomeId)}>
                 <a>取消</a>
               </Popconfirm>
             </span>
           ) : (
             <div>
-              <Button type="primary" shape="round" icon="download" size={'default'} onClick={() => this.edit(record.key)}>
+              <Button type="primary" shape="round" icon="download" size={'default'} onClick={() => this.edit(record.incomeId)}>
                 编辑
               </Button>
 
-              <Button type="danger" shape="round" icon="download" size={'default'} onClick={() => this.delete(record.key)}>
+              <Button type="danger" shape="round" icon="download" size={'default'} onClick={() => this.delete(record.incomeId)}>
                 删除
               </Button>
 
@@ -185,14 +159,14 @@ class EditableTable extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'Income/selectAll',
+      type: `${namespace}/selectAll`,
       payload: {
         offset: '1',
-        limit: '10',
+        limit: '12',
       },
     });
   }
-  isEditing = record => record.key === this.state.editingKey;
+  isEditing = record => record.incomeId === this.state.editingKey;
 
   cancel = () => {
     this.setState({ editingKey: '' });
@@ -256,8 +230,9 @@ class EditableTable extends React.Component {
         <Table
           components={components}
           bordered
-          dataSource={data}
+          dataSource={data.data}
           columns={columns}
+          rowKey="incomeId"
           rowClassName="editable-row"
           pagination={{
             onChange: this.cancel,
