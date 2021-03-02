@@ -1,244 +1,223 @@
 import React from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Col, Row, DatePicker } from 'antd';
-import Button from "antd/es/button";
+import { Select ,Row ,Col , Button, Tooltip, Table} from 'antd';
+import reqwest from 'reqwest';
+import {hashHistory} from 'react-router';
 
+const columns = [
+  {
+    title: '消费id',
+    dataIndex: 'expensesId',
+    sorter: true,
+  },
+  {
+    title: '消费时间',
+    dataIndex: 'expensesTime',
+    sorter: true,
+  },
+  {
+    title: '消费金额',
+    dataIndex: 'expensesNum',
+    sorter: true,
+  },
+  {
+    title: '消费类型',
+    dataIndex: 'expensesSort',
+    sorter: true,
+  },
+  {
+    title: '备注',
+    dataIndex: 'expensesRemark',
+    sorter: true,
+  },
+  {
+    title: '消费人账号',
+    dataIndex: 'expensesUserId',
+    sorter: true,
+  },
+  {
+    title: '消费人姓名',
+    dataIndex: 'expensesUser',
+    sorter: true,
+  }
+];
 
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
+const { Option } = Select;
+
+let param = {
+  fundType: [],
+  sort: "r",
+  fundCompany: []
 }
-const EditableContext = React.createContext();
 
-class EditableCell extends React.Component {
-  getInput = () => {
-    if (this.props.inputType === 'number') {
-      return <InputNumber />;
-    }
-    return <Input />;
-  };
-
-  renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      inputType,
-      record,
-      index,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: record[dataIndex],
-            })(this.getInput())}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
+function changeType(value) {
+  param.fundType = [];
+  for (var i = 0; i < value.length; i++) {
+    param.fundType.push(value[i].key)
   }
 }
 
-class EditableTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { data, editingKey: '' };
-    this.columns = [
-      {
-        title: 'name',
-        dataIndex: 'name',
-        width: '25%',
-        editable: true,
-      },
-      {
-        title: 'age',
-        dataIndex: 'age',
-        width: '15%',
-        editable: true,
-      },
-      {
-        title: 'address',
-        dataIndex: 'address',
-        width: '40%',
-        editable: true,
-      },
-      {
-        title: 'operation',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <a
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </a>
-                )}
-              </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                <a>Cancel</a>
-              </Popconfirm>
-            </span>
-          ) : (
-            <div>
-            <Button type="primary" shape="round" icon="download" size={'default'} onClick={() => this.edit(record.key)}>
-                编辑
-            </Button>
+function changeSort(value) {
+  console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
+  param.sort = value.key;
 
-            <Button type="danger" shape="round" icon="download" size={'default'} onClick={() => this.delete(record.key)}>
-                删除
-            </Button>
+}
 
-            </div>
-
-
-          );
-        },
-      },
-    ];
+function handleChange(value) {
+  console.log(value); // { key: "lucy", label: "Lucy (101)" }
+  param.fundCompany = [];
+  for (let i = 0; i < value.length; i++) {
+    param.fundCompany.push(value[i].key);
   }
+}
 
-  isEditing = record => record.key === this.state.editingKey;
+export default class FundRank extends React.Component{
 
-  cancel = () => {
-    this.setState({ editingKey: '' });
+  state = {
+    data: [],
+    pagination: {},
+    loading: false,
   };
 
-  save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        this.setState({ data: newData, editingKey: '' });
-      } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: '' });
-      }
+  componentDidMount() {
+    this.fetch();
+  }
+
+  handleTableChange = (pagination, filters, sorter) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    console.log(pager.current);
+    console.log("???????????????????????");
+    this.setState({
+      pagination: pager,
     });
-  }
-
-  edit(key) {
-    this.setState({ editingKey: key });
-  }
-
-  delete(key) {
-    this.setState({deleteKey : key});
-  }
-
-  render() {
-    const components = {
-      body: {
-        cell: EditableCell,
-      },
-    };
-
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record),
-        }),
-      };
+    this.fetch({
+      limit: pagination.pageSize,
+      offset: pagination.current,
+      ...filters,
     });
+  };
 
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
-        />
-      </EditableContext.Provider>
-    );
+  fetch = (params = {}) => {
+    console.log('params:', params);
+    this.setState({ loading: true });
+    reqwest({
+      url: 'http://localhost:10010/friday/bills/userExpenses/selectAll',
+      method: 'get',
+      contentType: 'application/json',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      data: {
+        limit: 10,
+        ...params
+      },
+      type: 'json',
+    }).then(data => {
+      const pagination = { ...this.state.pagination };
+      console.log(data);
+      // Read total count from server
+      pagination.total = data.count;
+      console.log("--------------------");
+      console.log(data.count);
+      console.log(data.data);
+      this.setState({
+        loading: false,
+        data: data.data,
+        pagination,
+      });
+    });
+  };
+
+
+  searchFund(sort, fundType, fundCompany) {
+    param.sort = sort;
+    param.fundType = fundType;
+    param.fundCompany = fundCompany;
+    this.fetch(param)
   }
-}
-
-
-const EditableFormTable = Form.create()(EditableTable);
-const InputGroup = Input.Group;
-const {  RangePicker } = DatePicker;
-function onChange(date, dateString) {
-  console.log(date, dateString);
-}
-export default class ExpensesIndex extends React.Component{
 
   render() {
     return(
       <div>
-        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
-          <Col span={5}>
+        <Row style = {{fontSize:'14px'}}>
+          <Col span={20}>
+            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
+              <label>基金类型:</label>
+              <Select
+                mode="multiple"
+                placeholder={"可选多个，默认全选"}
+                labelInValue
+                style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
+                onChange={changeType}
+              >
+                <Option value="gp">股票型</Option>
+                <Option value="hh">混合型</Option>
+                <Option value="zq">债券型</Option>
+                <Option value="zs">指数型</Option>
+                <Option value="qdii">QHII</Option>
+                <Option value="fof">FOF</Option>
+              </Select>
+            </div>
+
+            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
+              <label>排序方式:</label>
+              <Select
+                labelInValue
+                placeholder={"日涨幅"}
+                style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap'}}
+                onChange={changeSort}
+              >
+                <Option value="r">日涨幅</Option>
+                <Option value="z">周涨幅</Option>
+                <Option value="1y">近一个月</Option>
+                <Option value="3y">近三个月</Option>
+                <Option value="6y">近半年</Option>
+                <Option value="jn">今年涨幅</Option>
+                <Option value="1n">近一年</Option>
+
+              </Select>
+            </div>
+
+            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
+              <label>基金公司:</label>
+              <Select
+                mode="multiple"
+                placeholder={"可选多个，默认全选"}
+                labelInValue
+                style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
+                onChange={handleChange}
+              >
+                <Option value="80000222">华夏</Option>
+                <Option value="80000223">嘉实</Option>
+                <Option value="80000229">易方达</Option>
+                <Option value="80000220">南方</Option>
+                <Option value="80048752">中银</Option>
+                <Option value="80000248">广发</Option>
+                <Option value="80064225">工银</Option>
+                <Option value="80000226">博时</Option>
+                <Option value="80000228">华安</Option>
+                <Option value="80053708">汇添富</Option>
+
+              </Select>
+            </div>
+            <Button icon="search" type="primary" onClick={() => this.searchFund(param.sort, param.fundType,param.fundCompany)}>Search</Button>
           </Col>
 
-          <Col span={12}>
-            <InputGroup compact>
-              <Input style={{ width: '50%' }}  />
-              <RangePicker onChange={onChange} style={{ width: '50%' }} />
-            </InputGroup>
-          </Col>
-          <Col span={7}>
-            <Button type="primary" shape="circle" icon="search" />
+          <Col span = {4}>
           </Col>
         </Row>
 
-
-        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
-          <Col span={24}>
-            <Button type="primary" icon="add" style={{marginLeft :'0.3rem',float:'right'}}>
-              添加
-            </Button>
-            <Button type="primary" icon="download" style={{marginLeft :'0.3rem',float:'right'}}>
-              下载
-            </Button>
-          </Col>
-
-        </Row>
-      <EditableFormTable />
+        <Table
+          columns={columns}
+          rowKey="expensesId"
+          dataSource={this.state.data}
+          pagination={this.state.pagination}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
+        />
       </div>
     )
   }
+
+
 }

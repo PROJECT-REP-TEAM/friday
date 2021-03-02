@@ -162,7 +162,7 @@ class EditableTable extends React.Component {
       type: `${namespace}/selectAll`,
       payload: {
         offset: '1',
-        limit: '12',
+        limit: '12000',
       },
     });
   }
@@ -173,24 +173,25 @@ class EditableTable extends React.Component {
   };
 
   save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        this.setState({ data: newData, editingKey: '' });
-      } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: '' });
-      }
-    });
+    location.reload();
+    // form.validateFields((error, row) => {
+    //   if (error) {
+    //     return;
+    //   }
+    //   const newData = [...this.state.data];
+    //   const index = newData.findIndex(item => key === item.key);
+    //   if (index > -1) {
+    //     const item = newData[index];
+    //     newData.splice(index, 1, {
+    //       ...item,
+    //       ...row,
+    //     });
+    //     this.setState({ data: newData, editingKey: '' });
+    //   } else {
+    //     newData.push(row);
+    //     this.setState({ data: newData, editingKey: '' });
+    //   }
+    // });
   }
 
   edit(key) {

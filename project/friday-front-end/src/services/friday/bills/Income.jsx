@@ -8,8 +8,8 @@ export async function selectAll(params) {
   });
 }
 
-// export async function queryUser2(params) {
-//   return request(`/server/api//test/user?${params}`, {
-//     method: "POST"
-//   });
-// }
+export async function editIncomeBykey(params) {
+  return request(`/server/api//test/user?${params}`, {
+    method: "POST"
+  });
+}

@@ -45,9 +45,15 @@ public class UserExpensesController {
      * @return 对象列表
      */
     @GetMapping("selectAll")
-    public ResponseEntity<Map<String,Object>> selectAll(Integer offset ,Integer limit , UserExpenses userExpenses){
+    public ResponseEntity<Map<String,Object>> selectAll(
+            @RequestParam(value = "offset" ,required = false) Integer offset,
+            Integer limit , UserExpenses userExpenses){
         Map<String,Object> map = new HashMap<>();
+        if (offset == null || offset == 0){
+            userExpenses.setOffset(1);
+        }else{
         userExpenses.setOffset(offset);
+        }
         userExpenses.setLimit(limit);
         PageInfo<UserExpenses> allData = userExpensesService.queryAllByEntity(userExpenses);
         map.put("count",allData.getTotal());

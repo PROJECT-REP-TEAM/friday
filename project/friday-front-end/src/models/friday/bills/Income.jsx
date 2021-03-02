@@ -1,4 +1,4 @@
-import { selectAll } from "@/services/friday/bills/Income";
+import { selectAll , editIncomeBykey} from "@/services/friday/bills/Income";
 
 export default {
   namespace: "incomeMSG",
@@ -21,7 +21,15 @@ export default {
         type: "queryIncome",
         payload: response
       });
-    }
+    },
+
+      *editIncome({ payload }, { call, put }) {
+        const response = yield call(editIncomeBykey, payload);
+        yield put({
+          type: "editIncome",
+          payload: response
+        });
+      },
   },
 
   reducers: {
@@ -36,6 +44,13 @@ export default {
         ...state,
         data: action.payload
       };
-    }
+    },
+
+    editIncome(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
   }
 };
