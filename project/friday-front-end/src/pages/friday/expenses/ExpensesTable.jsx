@@ -1,84 +1,188 @@
 import React from 'react';
-import { Select ,Row ,Col , Button, Tooltip, Table,DatePicker } from 'antd';
+import {
+  Select,
+  Row,
+  Col,
+  Button,
+  Tooltip,
+  Table,
+  DatePicker,
+  InputNumber,
+  Input,
+  Form,
+  Popconfirm,
+} from 'antd';
 import reqwest from 'reqwest';
-import {hashHistory} from 'react-router';
 
 const { Option } = Select;
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+const { RangePicker } = DatePicker;
 
+const EditableContext = React.createContext();
 
+class EditableCell extends React.Component {
+  getInput = () => {
+    if (this.props.inputType === 'number') {
+      return <InputNumber />;
+    }
+    return <Input />;
+  };
 
+  renderCell = ({ getFieldDecorator }) => {
+    const {
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      children,
+      ...restProps
+    } = this.props;
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item style={{ margin: 0 }}>
+            {getFieldDecorator(dataIndex, {
+              rules: [
+                {
+                  required: true,
+                  message: `Please Input ${title}!`,
+                },
+              ],
+              initialValue: record[dataIndex],
+            })(this.getInput())}
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
 
-const columns = [
-  {
-    title: '消费id',
-    dataIndex: 'expensesId',
-    sorter: true,
-  },
-  {
-    title: '消费时间',
-    dataIndex: 'expensesTime',
-    sorter: true,
-  },
-  {
-    title: '消费金额',
-    dataIndex: 'expensesNum',
-    sorter: true,
-  },
-  {
-    title: '消费类型',
-    dataIndex: 'expensesSort',
-    sorter: true,
-  },
-  {
-    title: '备注',
-    dataIndex: 'expensesRemark',
-    sorter: true,
-  },
-  {
-    title: '消费人账号',
-    dataIndex: 'expensesUserId',
-    sorter: true,
-  },
-  {
-    title: '消费人姓名',
-    dataIndex: 'expensesUser',
-    sorter: true,
-  },
-
-];
-
-let param = {
-  expensesTime: "",
-  expensesSort: "",
+  render() {
+    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
+  }
 }
 
+// 初始化值
+let param = {
+  expensesTime: '',
+  expensesSort: '',
+};
+
+let data = [];
+// 选择分类
 function changeType(value) {
   console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
   param.expensesSort = value.key;
-
 }
 
-
+// 选择时间段
 function onChangeTime(date, dateString) {
   console.log(dateString.toString());
-  param.expensesTime = dateString.toString()
+  param.expensesTime = dateString.toString();
 }
 
+class EditableTableExpenses extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editingKey: '',
+      data: data,
+      pagination: {},
+      loading: false,
+    };
+    this.columns = [
+      {
+        title: '消费id',
+        dataIndex: 'expensesId',
+        editable: true,
+      },
+      {
+        title: '消费时间',
+        dataIndex: 'expensesTime',
+        editable: true,
+      },
+      {
+        title: '消费金额',
+        dataIndex: 'expensesNum',
+        editable: true,
+      },
+      {
+        title: '消费类型',
+        dataIndex: 'expensesSort',
+        editable: true,
+      },
+      {
+        title: '备注',
+        dataIndex: 'expensesRemark',
+        editable: true,
+      },
+      {
+        title: '消费人账号',
+        dataIndex: 'expensesUserId',
+        editable: true,
+      },
+      {
+        title: '消费人姓名',
+        dataIndex: 'expensesUser',
+        editable: true,
+      },
 
-export default class FundRank extends React.Component{
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          const { editingKey } = this.state;
+          const editable = this.isEditing(record);
+          return editable ? (
+            <span>
+              <EditableContext.Consumer>
+                {form => (
+                  <a onClick={() => this.save(form, record.expensesId)} style={{ marginRight: 8 }}>
+                    保存
+                  </a>
+                )}
+              </EditableContext.Consumer>
+              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.expensesId)}>
+                <a>取消</a>
+              </Popconfirm>
+            </span>
+          ) : (
+            <div>
+              <Button
+                type="primary"
+                shape="round"
+                icon="download"
+                size={'default'}
+                onClick={() => this.edit(record.expensesId)}
+              >
+                编辑
+              </Button>
 
-  state = {
-    data: [],
-    pagination: {},
-    loading: false,
-  };
-
+              <Button
+                type="danger"
+                shape="round"
+                icon="download"
+                size={'default'}
+                onClick={() => this.delete(record.expensesId)}
+              >
+                删除
+              </Button>
+            </div>
+          );
+        },
+        width: '20%',
+      },
+    ];
+  }
+  // 初始化表格数据
   componentDidMount() {
     this.fetch();
   }
 
-  handleTableChange = (pagination, filters, sorter) => {
+  // 变换条件发送请求
+  handleTableChange = (pagination, filters) => {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
@@ -91,6 +195,7 @@ export default class FundRank extends React.Component{
     });
   };
 
+  // 发送请求
   fetch = (params = {}) => {
     console.log('params:', params);
     this.setState({ loading: true });
@@ -98,12 +203,12 @@ export default class FundRank extends React.Component{
       url: 'http://localhost:10010/friday/bills/userExpenses/selectAll',
       method: 'get',
       contentType: 'application/json',
-      headers:{
-        'Content-Type':'application/json'
+      headers: {
+        'Content-Type': 'application/json',
       },
       data: {
         limit: 10,
-        ...params
+        ...params,
       },
       type: 'json',
     }).then(data => {
@@ -118,25 +223,114 @@ export default class FundRank extends React.Component{
     });
   };
 
-
+  // 搜索
   searchFund(expensesSort, expensesTime) {
     param.expensesSort = expensesSort;
     param.expensesTime = expensesTime;
-    this.fetch(param)
+    this.fetch(param);
+  }
+
+  isEditing = record => record.expensesId === this.state.editingKey;
+
+  cancel = () => {
+    this.setState({ editingKey: '' });
+  };
+
+  save(form, key) {
+    location.reload();
+    // form.validateFields((error, row) => {
+    //   if (error) {
+    //     return;
+    //   }
+    //   const newData = [...this.state.data];
+    //   const index = newData.findIndex(item => key === item.key);
+    //   if (index > -1) {
+    //     const item = newData[index];
+    //     newData.splice(index, 1, {
+    //       ...item,
+    //       ...row,
+    //     });
+    //     this.setState({ data: newData, editingKey: '' });
+    //   } else {
+    //     newData.push(row);
+    //     this.setState({ data: newData, editingKey: '' });
+    //   }
+    // });
+  }
+
+  edit(key) {
+    this.setState({ editingKey: key });
+  }
+
+  delete(key) {
+    this.setState({ deleteKey: key });
   }
 
   render() {
-    return(
+    const components = {
+      body: {
+        cell: EditableCell,
+      },
+    };
+
+    const columns = this.columns.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: this.isEditing(record),
+        }),
+      };
+    });
+
+    return (
+      <EditableContext.Provider value={this.props.form}>
+        <Table
+          components={components}
+          bordered
+          dataSource={this.state.data}
+          columns={columns}
+          rowKey="expensesId"
+          rowClassName="editable-row"
+          onChange={this.handleTableChange}
+          pagination={this.state.pagination}
+          loading={this.state.loading}
+        />
+      </EditableContext.Provider>
+    );
+  }
+}
+
+const EditableCellForm = Form.create()(EditableTableExpenses);
+
+export default class ExpensesTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
       <div>
-        <Row style = {{fontSize:'14px'}}>
+        <Row style={{ fontSize: '14px' }}>
           <Col span={20}>
-            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
+            <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
               <label>支出类型:</label>
               <Select
                 // mode="multiple"
-                placeholder={"可选类型，默认全选"}
+                placeholder={'可选类型，默认全选'}
                 labelInValue
-                style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
+                style={{
+                  width: 180,
+                  marginRight: '2.5rem',
+                  marginBottom: '1rem',
+                  whiteSpace: 'nowrap',
+                }}
                 onChange={changeType}
               >
                 <Option value="">全部</Option>
@@ -151,65 +345,41 @@ export default class FundRank extends React.Component{
               </Select>
             </div>
 
-            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
+            <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
               <label>查找时间：</label>
               <RangePicker
                 onChange={onChangeTime}
-                style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
+                style={{
+                  width: 180,
+                  marginRight: '2.5rem',
+                  marginBottom: '1rem',
+                  whiteSpace: 'nowrap',
+                }}
               />
             </div>
-
-            {/*<div style={{display : 'inline',whiteSpace:'nowrap'}}>*/}
-            {/*  <label>基金公司:</label>*/}
-            {/*  <Select*/}
-            {/*    mode="multiple"*/}
-            {/*    placeholder={"可选多个，默认全选"}*/}
-            {/*    labelInValue*/}
-            {/*    style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}*/}
-            {/*    onChange={handleChange}*/}
-            {/*  >*/}
-            {/*    <Option value="80000222">华夏</Option>*/}
-            {/*    <Option value="80000223">嘉实</Option>*/}
-            {/*    <Option value="80000229">易方达</Option>*/}
-            {/*    <Option value="80000220">南方</Option>*/}
-            {/*    <Option value="80048752">中银</Option>*/}
-            {/*    <Option value="80000248">广发</Option>*/}
-            {/*    <Option value="80064225">工银</Option>*/}
-            {/*    <Option value="80000226">博时</Option>*/}
-            {/*    <Option value="80000228">华安</Option>*/}
-            {/*    <Option value="80053708">汇添富</Option>*/}
-
-            {/*  </Select>*/}
-            {/*</div>*/}
-            <Button icon="search" type="primary" onClick={() => this.searchFund(param.expensesSort, param.expensesTime)}>Search</Button>
+            <Button
+              icon="search"
+              type="primary"
+              onClick={() => this.searchFund(param.expensesSort, param.expensesTime)}
+            >
+              Search
+            </Button>
           </Col>
 
-          <Col span = {4}>
-
-          </Col>
+          <Col span={4}></Col>
         </Row>
-        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
+        <Row style={{ marginTop: '1rem', marginBottom: '1rem' }}>
           <Col span={24}>
-            <Button type="primary" icon="add" style={{marginLeft :'0.3rem',float:'right'}}>
+            <Button type="primary" icon="add" style={{ marginLeft: '0.3rem', float: 'right' }}>
               添加
             </Button>
-            <Button type="primary" icon="download" style={{marginLeft :'0.3rem',float:'right'}}>
+            <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}>
               下载
             </Button>
           </Col>
-
         </Row>
-        <Table
-          columns={columns}
-          rowKey="expensesId"
-          dataSource={this.state.data}
-          pagination={this.state.pagination}
-          loading={this.state.loading}
-          onChange={this.handleTableChange}
-        />
+        <EditableCellForm />
       </div>
-    )
+    );
   }
-
-
 }
