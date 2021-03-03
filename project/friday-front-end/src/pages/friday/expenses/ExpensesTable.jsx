@@ -1,7 +1,13 @@
 import React from 'react';
-import { Select ,Row ,Col , Button, Tooltip, Table} from 'antd';
+import { Select ,Row ,Col , Button, Tooltip, Table,DatePicker } from 'antd';
 import reqwest from 'reqwest';
 import {hashHistory} from 'react-router';
+
+const { Option } = Select;
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+
+
+
 
 const columns = [
   {
@@ -38,37 +44,27 @@ const columns = [
     title: '消费人姓名',
     dataIndex: 'expensesUser',
     sorter: true,
-  }
+  },
+
 ];
 
-const { Option } = Select;
-
 let param = {
-  fundType: [],
-  sort: "r",
-  fundCompany: []
+  expensesTime: "",
+  expensesSort: "",
 }
 
 function changeType(value) {
-  param.fundType = [];
-  for (var i = 0; i < value.length; i++) {
-    param.fundType.push(value[i].key)
-  }
-}
-
-function changeSort(value) {
   console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
-  param.sort = value.key;
+  param.expensesSort = value.key;
 
 }
 
-function handleChange(value) {
-  console.log(value); // { key: "lucy", label: "Lucy (101)" }
-  param.fundCompany = [];
-  for (let i = 0; i < value.length; i++) {
-    param.fundCompany.push(value[i].key);
-  }
+
+function onChangeTime(date, dateString) {
+  console.log(dateString.toString());
+  param.expensesTime = dateString.toString()
 }
+
 
 export default class FundRank extends React.Component{
 
@@ -85,8 +81,6 @@ export default class FundRank extends React.Component{
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
-    console.log(pager.current);
-    console.log("???????????????????????");
     this.setState({
       pagination: pager,
     });
@@ -114,12 +108,8 @@ export default class FundRank extends React.Component{
       type: 'json',
     }).then(data => {
       const pagination = { ...this.state.pagination };
-      console.log(data);
       // Read total count from server
       pagination.total = data.count;
-      console.log("--------------------");
-      console.log(data.count);
-      console.log(data.data);
       this.setState({
         loading: false,
         data: data.data,
@@ -129,10 +119,9 @@ export default class FundRank extends React.Component{
   };
 
 
-  searchFund(sort, fundType, fundCompany) {
-    param.sort = sort;
-    param.fundType = fundType;
-    param.fundCompany = fundCompany;
+  searchFund(expensesSort, expensesTime) {
+    param.expensesSort = expensesSort;
+    param.expensesTime = expensesTime;
     this.fetch(param)
   }
 
@@ -142,71 +131,74 @@ export default class FundRank extends React.Component{
         <Row style = {{fontSize:'14px'}}>
           <Col span={20}>
             <div style={{display : 'inline',whiteSpace:'nowrap'}}>
-              <label>基金类型:</label>
+              <label>支出类型:</label>
               <Select
-                mode="multiple"
-                placeholder={"可选多个，默认全选"}
+                // mode="multiple"
+                placeholder={"可选类型，默认全选"}
                 labelInValue
                 style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
                 onChange={changeType}
               >
-                <Option value="gp">股票型</Option>
-                <Option value="hh">混合型</Option>
-                <Option value="zq">债券型</Option>
-                <Option value="zs">指数型</Option>
-                <Option value="qdii">QHII</Option>
-                <Option value="fof">FOF</Option>
+                <Option value="">全部</Option>
+                <Option value="交通">交通</Option>
+                <Option value="饮食">饮食</Option>
+                <Option value="烟酒">烟酒</Option>
+                <Option value="人情">人情</Option>
+                <Option value="学习">学习</Option>
+                <Option value="设备">设备</Option>
+                <Option value="家居">家居</Option>
+                <Option value="其他">其他</Option>
               </Select>
             </div>
 
             <div style={{display : 'inline',whiteSpace:'nowrap'}}>
-              <label>排序方式:</label>
-              <Select
-                labelInValue
-                placeholder={"日涨幅"}
-                style={{ width: 180 ,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap'}}
-                onChange={changeSort}
-              >
-                <Option value="r">日涨幅</Option>
-                <Option value="z">周涨幅</Option>
-                <Option value="1y">近一个月</Option>
-                <Option value="3y">近三个月</Option>
-                <Option value="6y">近半年</Option>
-                <Option value="jn">今年涨幅</Option>
-                <Option value="1n">近一年</Option>
-
-              </Select>
-            </div>
-
-            <div style={{display : 'inline',whiteSpace:'nowrap'}}>
-              <label>基金公司:</label>
-              <Select
-                mode="multiple"
-                placeholder={"可选多个，默认全选"}
-                labelInValue
+              <label>查找时间：</label>
+              <RangePicker
+                onChange={onChangeTime}
                 style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}
-                onChange={handleChange}
-              >
-                <Option value="80000222">华夏</Option>
-                <Option value="80000223">嘉实</Option>
-                <Option value="80000229">易方达</Option>
-                <Option value="80000220">南方</Option>
-                <Option value="80048752">中银</Option>
-                <Option value="80000248">广发</Option>
-                <Option value="80064225">工银</Option>
-                <Option value="80000226">博时</Option>
-                <Option value="80000228">华安</Option>
-                <Option value="80053708">汇添富</Option>
-
-              </Select>
+              />
             </div>
-            <Button icon="search" type="primary" onClick={() => this.searchFund(param.sort, param.fundType,param.fundCompany)}>Search</Button>
+
+            {/*<div style={{display : 'inline',whiteSpace:'nowrap'}}>*/}
+            {/*  <label>基金公司:</label>*/}
+            {/*  <Select*/}
+            {/*    mode="multiple"*/}
+            {/*    placeholder={"可选多个，默认全选"}*/}
+            {/*    labelInValue*/}
+            {/*    style={{ width: 180,marginRight: '2.5rem', marginBottom :'1rem', whiteSpace:'nowrap' }}*/}
+            {/*    onChange={handleChange}*/}
+            {/*  >*/}
+            {/*    <Option value="80000222">华夏</Option>*/}
+            {/*    <Option value="80000223">嘉实</Option>*/}
+            {/*    <Option value="80000229">易方达</Option>*/}
+            {/*    <Option value="80000220">南方</Option>*/}
+            {/*    <Option value="80048752">中银</Option>*/}
+            {/*    <Option value="80000248">广发</Option>*/}
+            {/*    <Option value="80064225">工银</Option>*/}
+            {/*    <Option value="80000226">博时</Option>*/}
+            {/*    <Option value="80000228">华安</Option>*/}
+            {/*    <Option value="80053708">汇添富</Option>*/}
+
+            {/*  </Select>*/}
+            {/*</div>*/}
+            <Button icon="search" type="primary" onClick={() => this.searchFund(param.expensesSort, param.expensesTime)}>Search</Button>
           </Col>
 
           <Col span = {4}>
+
           </Col>
         </Row>
+        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
+          <Col span={24}>
+            <Button type="primary" icon="add" style={{marginLeft :'0.3rem',float:'right'}}>
+              添加
+            </Button>
+            <Button type="primary" icon="download" style={{marginLeft :'0.3rem',float:'right'}}>
+              下载
+            </Button>
+          </Col>
 
+        </Row>
         <Table
           columns={columns}
           rowKey="expensesId"

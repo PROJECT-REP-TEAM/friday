@@ -2,6 +2,7 @@ package com.friday.bills.controller;
 
 import com.friday.bills.entity.UserExpenses;
 import com.friday.bills.service.UserExpensesService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,13 @@ public class UserExpensesController {
         if (offset == null || offset == 0){
             userExpenses.setOffset(1);
         }else{
-        userExpenses.setOffset(offset);
+            userExpenses.setOffset(offset);
+        }
+
+        if (StringUtils.isNotBlank(userExpenses.getExpensesTime())){
+            String[] split = StringUtils.split(userExpenses.getExpensesTime(), ',');
+            userExpenses.setDate1(split[0].replaceAll("-",""));
+            userExpenses.setDate2(split[1].replaceAll("-",""));
         }
         userExpenses.setLimit(limit);
         PageInfo<UserExpenses> allData = userExpensesService.queryAllByEntity(userExpenses);
