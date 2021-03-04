@@ -103,8 +103,11 @@ public class UserExpensesController {
      * @param userExpenses
      * @return Void
      */
-    @PutMapping("update")
+    @PostMapping("update")
     public ResponseEntity<Void> update(@RequestBody UserExpenses userExpenses){
+        if (userExpenses.getExpensesId() == null || userExpenses.getExpensesId() == 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         userExpensesService.update(userExpenses);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

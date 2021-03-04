@@ -26,7 +26,7 @@ export default {
       *editIncome({ payload }, { call, put }) {
         const response = yield call(editIncomeBykey, payload);
         yield put({
-          type: "editIncome",
+          type: "updateIncome",
           payload: response
         });
       },
@@ -46,7 +46,7 @@ export default {
       };
     },
 
-    editIncome(state, action) {
+    updateIncome(state, action) {
       return {
         ...state,
         data: action.payload

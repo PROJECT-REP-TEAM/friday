@@ -4,15 +4,22 @@ import {
   Row,
   Col,
   Button,
-  Tooltip,
+  Modal,
   Table,
   DatePicker,
   InputNumber,
   Input,
   Form,
   Popconfirm,
+  message,
+  Checkbox,
+  Icon
 } from 'antd';
 import reqwest from 'reqwest';
+
+import { connect } from 'dva';
+
+const namespace = 'expensesMSG';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -83,44 +90,58 @@ function onChangeTime(date, dateString) {
   param.expensesTime = dateString.toString();
 }
 
+
+@connect(({ expensesMSG, loading }) => ({
+  data: expensesMSG.data, // 将data赋值给
+  loading: loading
+}))
+
 class EditableTableExpenses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editingKey: '',
+      deleteKey:'',
       data: data,
       pagination: {},
       loading: false,
+      visible: false
     };
     this.columns = [
       {
         title: '消费id',
         dataIndex: 'expensesId',
-        editable: true,
+        align: 'center',
+        editable: false,
       },
       {
         title: '消费时间',
         dataIndex: 'expensesTime',
+        align: 'center',
         editable: true,
       },
       {
         title: '消费金额',
         dataIndex: 'expensesNum',
+        align: 'center',
         editable: true,
       },
       {
         title: '消费类型',
         dataIndex: 'expensesSort',
+        align: 'center',
         editable: true,
       },
       {
         title: '备注',
         dataIndex: 'expensesRemark',
+        align: 'center',
         editable: true,
       },
       {
         title: '消费人账号',
         dataIndex: 'expensesUserId',
+        align: 'center',
         editable: true,
       },
       {
@@ -132,6 +153,7 @@ class EditableTableExpenses extends React.Component {
       {
         title: '操作',
         dataIndex: 'operation',
+        align: 'center',
         render: (text, record) => {
           const { editingKey } = this.state;
           const editable = this.isEditing(record);
@@ -139,7 +161,7 @@ class EditableTableExpenses extends React.Component {
             <span>
               <EditableContext.Consumer>
                 {form => (
-                  <a onClick={() => this.save(form, record.expensesId)} style={{ marginRight: 8 }}>
+                  <a onClick={() => this.save(form, record)} style={{ marginRight: 8 }}>
                     保存
                   </a>
                 )}
@@ -153,22 +175,24 @@ class EditableTableExpenses extends React.Component {
               <Button
                 type="primary"
                 shape="round"
-                icon="download"
+                icon="edit"
                 size={'default'}
+                style={{margin:'0 3px 0 3px'}}
                 onClick={() => this.edit(record.expensesId)}
               >
                 编辑
               </Button>
-
-              <Button
-                type="danger"
-                shape="round"
-                icon="download"
-                size={'default'}
-                onClick={() => this.delete(record.expensesId)}
-              >
-                删除
-              </Button>
+              <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.expensesId)}>
+                <Button
+                  type="danger"
+                  shape="round"
+                  icon="delete"
+                  size={'default'}
+                  style={{margin:'0 3px 0 3px'}}
+                >
+                  删除
+                </Button>
+              </Popconfirm>
             </div>
           );
         },
@@ -236,26 +260,37 @@ class EditableTableExpenses extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  save(form, key) {
-    location.reload();
-    // form.validateFields((error, row) => {
-    //   if (error) {
-    //     return;
-    //   }
-    //   const newData = [...this.state.data];
-    //   const index = newData.findIndex(item => key === item.key);
-    //   if (index > -1) {
-    //     const item = newData[index];
-    //     newData.splice(index, 1, {
-    //       ...item,
-    //       ...row,
-    //     });
-    //     this.setState({ data: newData, editingKey: '' });
-    //   } else {
-    //     newData.push(row);
-    //     this.setState({ data: newData, editingKey: '' });
-    //   }
-    // });
+  save(form, record) {
+    // console.log(form);
+    // console.log(key);
+    form.validateFields((error, row) => {
+      if (error) {
+        return;
+      }
+      console.log(record);
+      console.log("------修改后-------");
+      console.log(row);
+      row["expensesId"] = record["expensesId"];
+      const { dispatch } = this.props;
+      dispatch({
+        type: `${namespace}/updateExpenses`,
+        payload: {
+          ...row
+        },
+      });
+      data = this.state.data;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].expensesId === row["expensesId"]) {
+          data[i] = row;
+          break;
+        }
+      }
+      console.log(data);
+      this.setState({
+        editingKey: '',
+        data:data,});
+      message.info('修改成功！');
+    });
   }
 
   edit(key) {
@@ -263,10 +298,57 @@ class EditableTableExpenses extends React.Component {
   }
 
   delete(key) {
-    this.setState({ deleteKey: key });
+    console.log(key);
+    const { dispatch } = this.props;
+    dispatch({
+      type: `${namespace}/deleteExpenses`,
+      payload: {
+        id:key
+      },
+    });
+    data = this.state.data;
+    for (let i = 0; i <data.length; i++) {
+      if (data[i].expensesId === key) {
+        data.splice(i,1)
+      }
+    }
+    message.info('删除成功！');
   }
 
+  // 打开模态框
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  //增加模态框
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+
+
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
+
+  // 关闭模态框
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+
   render() {
+    const { getFieldDecorator } = this.props.form;
     const components = {
       body: {
         cell: EditableCell,
@@ -289,32 +371,6 @@ class EditableTableExpenses extends React.Component {
       };
     });
 
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowKey="expensesId"
-          rowClassName="editable-row"
-          onChange={this.handleTableChange}
-          pagination={this.state.pagination}
-          loading={this.state.loading}
-        />
-      </EditableContext.Provider>
-    );
-  }
-}
-
-const EditableCellForm = Form.create()(EditableTableExpenses);
-
-export default class ExpensesTable extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
     return (
       <div>
         <Row style={{ fontSize: '14px' }}>
@@ -370,7 +426,7 @@ export default class ExpensesTable extends React.Component {
         </Row>
         <Row style={{ marginTop: '1rem', marginBottom: '1rem' }}>
           <Col span={24}>
-            <Button type="primary" icon="add" style={{ marginLeft: '0.3rem', float: 'right' }}>
+            <Button type="primary" icon="add" style={{ marginLeft: '0.3rem', float: 'right' }} onClick={this.showModal}>
               添加
             </Button>
             <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}>
@@ -378,6 +434,70 @@ export default class ExpensesTable extends React.Component {
             </Button>
           </Col>
         </Row>
+        <EditableContext.Provider value={this.props.form}>
+          <Table
+            components={components}
+            bordered
+            dataSource={this.state.data}
+            columns={columns}
+            rowKey="expensesId"
+            rowClassName="editable-row"
+            onChange={this.handleTableChange}
+            pagination={this.state.pagination}
+            loading={this.state.loading}
+          />
+        </EditableContext.Provider>
+
+        <Modal
+          title="Basic Modal"
+          visible={this.state.visible}
+          bodyStyle={{width:'auto',height:'500px'}}
+          onOk={this.handleOk}
+          htmlType="submit"
+          onCancel={this.handleCancel}
+        >
+          <Form onSubmit={this.handleOk} className="login-form">
+            <Form.Item>
+              {getFieldDecorator('username', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+              })(
+                <Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Username"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('password', {
+                rules: [{ required: true, message: 'Please input your Password!' }],
+              })(
+                <Input
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  type="password"
+                  placeholder="Password"
+                />,
+              )}
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    );
+  }
+}
+
+
+
+
+const EditableCellForm = Form.create()(EditableTableExpenses);
+
+export default class ExpensesTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
         <EditableCellForm />
       </div>
     );

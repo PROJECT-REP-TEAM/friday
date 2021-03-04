@@ -138,23 +138,6 @@ class EditableTable extends React.Component {
     ];
   }
 
-  //传后端值
-  // componentDidMount() {
-  //   this.props.dispatch({
-  //     type: `${namespace}/selectAll`,
-  //     payload: {
-  //       offset: '1',
-  //       limit: '10',
-  //     },
-  //     callback: (data) => {
-  //       if(data.state){
-  //         if(data.data.length > 0) {
-  //           this.setState({data  : data.data});
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
   // 连接models层
   componentDidMount() {
     const { dispatch } = this.props;
