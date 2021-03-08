@@ -28,6 +28,8 @@ public interface UserInfoService {
      */
     List<UserInfo> queryAllByLimit(int offset, int limit);
 
+
+    UserInfo findOne(UserInfo userInfo);
     /**
      * 新增数据
      *

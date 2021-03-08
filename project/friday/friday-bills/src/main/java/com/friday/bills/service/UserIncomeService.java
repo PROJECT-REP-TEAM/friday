@@ -54,4 +54,5 @@ public interface UserIncomeService {
      */
     boolean deleteById(Integer incomeId);
 
+    List<String> findType();
 }

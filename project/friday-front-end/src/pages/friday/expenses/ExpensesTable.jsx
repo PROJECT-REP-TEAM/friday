@@ -77,6 +77,8 @@ let param = {
   expensesSort: '',
 };
 
+let groupSelect = [];
+let groupName = [];
 let data = [];
 // 选择分类
 function changeType(value) {
@@ -89,6 +91,9 @@ function onChangeTime(date, dateString) {
   console.log(dateString.toString());
   param.expensesTime = dateString.toString();
 }
+
+
+
 
 
 @connect(({ expensesMSG, loading }) => ({
@@ -203,6 +208,12 @@ class EditableTableExpenses extends React.Component {
   // 初始化表格数据
   componentDidMount() {
     this.fetch();
+
+    const { dispatch } = this.props;
+    dispatch({
+      type: `${namespace}/findType`,
+
+    });
   }
 
   // 变换条件发送请求
@@ -267,9 +278,6 @@ class EditableTableExpenses extends React.Component {
       if (error) {
         return;
       }
-      console.log(record);
-      console.log("------修改后-------");
-      console.log(row);
       row["expensesId"] = record["expensesId"];
       const { dispatch } = this.props;
       dispatch({
@@ -315,25 +323,53 @@ class EditableTableExpenses extends React.Component {
     message.info('删除成功！');
   }
 
+
   // 打开模态框
   showModal = () => {
     this.setState({
       visible: true,
     });
+    groupName = this.props.data;
+    groupSelect = [];
+    for (let i = 0; i < groupName.length; i++) {
+      groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
+    }
   };
 
-  //增加模态框
-  handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
+  sub = (param) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `${namespace}/insertExpenses`,
+      payload: {
+        ...param
+      },
     });
+  };
 
 
+
+  //增加模态框提交
+  handleOk = e => {
+    let isEmpty = true;
+    console.log(e);
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+      }
+      if (values["expensesUser"]!=null && values["expensesUser"] !== ""&&values["expensesSort"]!=null && values["expensesSort"] !== "" && values["expensesUser"]!=null && values["expensesUser"] !== ""){
+        isEmpty = false;
+      }
+      if (!isEmpty){
+        if(values["expensesSort"] === 999){
+          values["expensesSort"] = values["expensesSort1"] == null || values["expensesSort1"] === "" ? "其他" : values["expensesSort1"]
+        }
+        this.sub(values);
+        this.setState({
+          visible: false,
+        });
+        message.info('添加成功！');
+        this.props.form.resetFields();
       }
     });
   };
@@ -349,6 +385,7 @@ class EditableTableExpenses extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+
     const components = {
       body: {
         cell: EditableCell,
@@ -370,6 +407,7 @@ class EditableTableExpenses extends React.Component {
         }),
       };
     });
+
 
     return (
       <div>
@@ -451,30 +489,63 @@ class EditableTableExpenses extends React.Component {
         <Modal
           title="Basic Modal"
           visible={this.state.visible}
-          bodyStyle={{width:'auto',height:'500px'}}
+          bodyStyle={{width:'auto',height:'300px'}}
           onOk={this.handleOk}
+          afterClose={this.fetch}
           htmlType="submit"
           onCancel={this.handleCancel}
         >
           <Form onSubmit={this.handleOk} className="login-form">
             <Form.Item>
-              {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Please input your username!' }],
+              {getFieldDecorator('expensesUser', {
+                rules: [{ required: true, message: '消费人，默认为账号登录人' }],
               })(
                 <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="消费人"
+                />,
+              )}
+            </Form.Item>
+
+            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+            {getFieldDecorator('expensesSort', {
+                rules: [{ required: true, message: '请选择消费类型' }],
+              })(
+                <Select
+                  placeholder="选择{其它}后可以自行填写"
+                >
+                  {groupSelect}
+                  <Select.Option value={999} key={999}>其他</Select.Option>
+                </Select>
+              )}
+            </Form.Item>
+
+            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('expensesSort1', {
+                rules: [{message: '请选择消费类型' }],
+              })(
+                <Input
+                  placeholder="填写其他分类"
                 />,
               )}
             </Form.Item>
             <Form.Item>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }],
+              {getFieldDecorator('expensesNum', {
+                rules: [{ required: true, message: '请输入消费金额，单位：元' }],
+              })(
+                <Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="消费金额"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('expensesRemark', {
+                rules: [{  message: '备注' }],
               })(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Password"
+                  placeholder="备注（非必填）"
                 />,
               )}
             </Form.Item>

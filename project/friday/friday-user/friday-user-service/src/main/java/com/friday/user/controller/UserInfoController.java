@@ -2,6 +2,7 @@ package com.friday.user.controller;
 
 import com.friday.user.entity.UserInfo;
 import com.friday.user.service.UserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +50,13 @@ public class UserInfoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("findOne")
+    public ResponseEntity<UserInfo> findId(@RequestParam(value = "userName") String userName){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(userName);
+        UserInfo one = userInfoService.findOne(userInfo);
+        return ResponseEntity.ok(one);
     }
 }

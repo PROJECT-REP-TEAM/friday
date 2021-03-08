@@ -48,6 +48,13 @@
                 and income_user = #{incomeUser}
             </if>
         </where>
+        order by income_time desc,income_id desc
+    </select>
+
+    <select id="findType" resultType="java.lang.String">
+        select income_sort
+        from user_income
+        group by income_sort
     </select>
 
     <!--新增所有列-->

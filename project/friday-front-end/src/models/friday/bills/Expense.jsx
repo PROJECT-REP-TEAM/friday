@@ -1,4 +1,11 @@
-import { selectExpenses , updateExpenses , insertExpenses , deleteExpenses} from "@/services/friday/bills/Expenses";
+import {
+  selectExpenses ,
+  updateExpenses ,
+  insertExpenses ,
+  deleteExpenses ,
+  findType ,
+
+} from "@/services/friday/bills/Expenses";
 
 export default {
   namespace: "expensesMSG",
@@ -50,6 +57,14 @@ export default {
         payload: response
       });
     },
+
+    *findType({ payload }, { call, put }) {
+      const response = yield call(findType, payload);
+      yield put({
+        type: "findGroup",
+        payload: response
+      });
+    },
   },
 
   reducers: {
@@ -81,6 +96,13 @@ export default {
     },
 
     dropExpenses(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
+
+    findGroup(state, action) {
       return {
         ...state,
         data: action.payload

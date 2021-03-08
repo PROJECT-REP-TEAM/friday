@@ -1,4 +1,11 @@
-import { selectAll , editIncomeBykey} from "@/services/friday/bills/Income";
+import {
+  selectIncome ,
+  updateIncome ,
+  insertIncome ,
+  deleteIncome ,
+  findType ,
+
+} from "@/services/friday/bills/Income";
 
 export default {
   namespace: "incomeMSG",
@@ -14,8 +21,12 @@ export default {
      * @param put 发出一个 Action，类似于 dispatch 将服务端返回的数据传递给上面的state
      * @returns {IterableIterator<*>}
      */
-      *selectAll({ payload }, { call, put }) {
-      const response = yield call(selectAll, payload);
+
+
+
+
+      *selectIncome({ payload }, { call, put }) {
+      const response = yield call(selectIncome, payload);
       yield put({
         // 这行对应下面的reducers处理函数名字
         type: "queryIncome",
@@ -23,13 +34,37 @@ export default {
       });
     },
 
-      *editIncome({ payload }, { call, put }) {
-        const response = yield call(editIncomeBykey, payload);
-        yield put({
-          type: "updateIncome",
-          payload: response
-        });
-      },
+    *updateIncome({ payload }, { call, put }) {
+      const response = yield call(updateIncome, payload);
+      yield put({
+        type: "editIncome",
+        payload: response
+      });
+    },
+
+    *insertIncome({ payload }, { call, put }) {
+      const response = yield call(insertIncome, payload);
+      yield put({
+        type: "addIncome",
+        payload: response
+      });
+    },
+
+    *deleteIncome({ payload }, { call, put }) {
+      const response = yield call(deleteIncome, payload);
+      yield put({
+        type: "dropIncome",
+        payload: response
+      });
+    },
+
+    *findType({ payload }, { call, put }) {
+      const response = yield call(findType, payload);
+      yield put({
+        type: "findGroup",
+        payload: response
+      });
+    },
   },
 
   reducers: {
@@ -46,7 +81,28 @@ export default {
       };
     },
 
-    updateIncome(state, action) {
+    addIncome(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
+
+    editIncome(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
+
+    dropIncome(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
+
+    findGroup(state, action) {
       return {
         ...state,
         data: action.payload

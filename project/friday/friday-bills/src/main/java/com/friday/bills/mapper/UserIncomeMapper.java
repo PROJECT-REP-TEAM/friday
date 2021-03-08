@@ -54,4 +54,7 @@ public interface UserIncomeMapper {
      */
     int deleteById(Integer incomeId);
 
+    List<String> findType();
+
+
 }

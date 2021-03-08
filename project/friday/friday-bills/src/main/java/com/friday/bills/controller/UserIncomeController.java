@@ -1,8 +1,12 @@
 package com.friday.bills.controller;
 
+import com.friday.bills.client.UserClient;
 import com.friday.bills.entity.UserIncome;
 import com.friday.bills.service.UserIncomeService;
+import com.friday.common.utils.TimeUtils;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +31,8 @@ public class UserIncomeController {
     @Resource
     private UserIncomeService userIncomeService;
 
+    @Autowired
+    private UserClient userClient;
     /**
      * 通过主键查询单条数据
      *
@@ -46,16 +52,35 @@ public class UserIncomeController {
      * @return 对象列表
      */
     @GetMapping("selectAll")
-    public ResponseEntity<Map<String,Object>> selectAll(Integer offset ,Integer limit ,  UserIncome userIncome){
+    public ResponseEntity<Map<String,Object>> selectAll(
+            @RequestParam(value = "offset" ,required = false) Integer offset,
+            Integer limit ,   UserIncome userIncome){
         Map<String,Object> map = new HashMap<>();
-        userIncome.setOffset(offset);
+        if (offset == null || offset == 0){
+            userIncome.setOffset(1);
+        }else{
+            userIncome.setOffset(offset);
+        }
+        if (StringUtils.isNotBlank(userIncome.getIncomeTime()) && !",".equals(userIncome.getIncomeTime())){
+            String[] split = StringUtils.split(userIncome.getIncomeTime(), ',');
+            userIncome.setDate1(split[0].replaceAll("-",""));
+            userIncome.setDate2(split[1].replaceAll("-",""));
+        }else {
+            userIncome.setIncomeTime(null);
+        }
         userIncome.setLimit(limit);
-        PageInfo<UserIncome> userIncomes = userIncomeService.queryAllByEntity(userIncome);
-        map.put("count",userIncomes.getTotal());
-        map.put("data",userIncomes.getList());
+        PageInfo<UserIncome> allData = userIncomeService.queryAllByEntity(userIncome);
+        map.put("count",allData.getTotal());
+        map.put("data",allData.getList());
         return ResponseEntity.ok(map);
     }
 
+
+    @GetMapping("findType")
+    public ResponseEntity<List<String>> findType(){
+        List<String> list = userIncomeService.findType();
+        return ResponseEntity.ok(list);
+    }
 
 
     /**
@@ -64,8 +89,11 @@ public class UserIncomeController {
      * @param userIncome 实例对象
      * @return Void
      */
-    @PostMapping("insertIncome")
-    public ResponseEntity<Void> insertIncome(@RequestBody UserIncome userIncome){
+    @GetMapping("insertIncome")
+    public ResponseEntity<Void> insertIncome(UserIncome userIncome){
+        userIncome.setIncomeTime(TimeUtils.getCurrentDateString("YYYYMMdd"));
+        Integer userId = userClient.findId(userIncome.getIncomeUser()).getUserId();
+        userIncome.setIncomeUserId(userId);
         userIncomeService.insert(userIncome);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -90,8 +118,11 @@ public class UserIncomeController {
      * @param userIncome 实例对象
      * @return Void
      */
-    @PutMapping("updateIncome")
+    @PostMapping("updateIncome")
     public ResponseEntity<Void> updateIncome(@RequestBody UserIncome userIncome){
+        if (userIncome.getIncomeId() == null || userIncome.getIncomeId() == 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         userIncomeService.update(userIncome);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

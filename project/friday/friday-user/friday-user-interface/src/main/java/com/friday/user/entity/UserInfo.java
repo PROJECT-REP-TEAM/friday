@@ -11,6 +11,9 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 958506210919059476L;
 
+    public UserInfo() {
+    }
+
     public UserInfo(Integer userId, String userName) {
         this.userId = userId;
         this.userName = userName;

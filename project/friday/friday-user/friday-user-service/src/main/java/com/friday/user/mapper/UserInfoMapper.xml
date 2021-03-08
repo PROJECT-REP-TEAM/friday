@@ -73,6 +73,11 @@
         select user_id,user_password from friday.user_info where user_id = #{userId}
     </select>
 
+
+    <select id="queryId" resultType="com.friday.user.entity.UserInfo">
+     select user_id as userId from friday.user_info where user_name = #{userName} limit 1
+    </select>
+
     <!--新增所有列-->
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
         insert into friday.user_info(user_name, user_password, sex, birthday, email, qq, createDate)
@@ -112,5 +117,8 @@
     <delete id="deleteById">
         delete from friday.user_info where user_id = #{userId}
     </delete>
+
+
+
 
 </mapper>

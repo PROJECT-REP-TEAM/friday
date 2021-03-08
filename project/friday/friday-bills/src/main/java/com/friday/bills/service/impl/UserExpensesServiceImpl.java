@@ -81,4 +81,9 @@ public class UserExpensesServiceImpl implements UserExpensesService {
     public boolean deleteById(Integer expensesId) {
         return this.userExpensesMapper.deleteById(expensesId) > 0;
     }
+
+    @Override
+    public List<String> findType() {
+        return userExpensesMapper.findType();
+    }
 }

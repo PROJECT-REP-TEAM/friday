@@ -19,16 +19,23 @@ export async function updateExpenses(params) {
 }
 
 export async function insertExpenses(params) {
-  return request(`/api/friday/bills/userExpenses/insert`, {
-    method: "POST",
-    contentType:'application/json',
-    body:JSON.stringify(params)
+  return request(`/api/friday/bills/userExpenses/insert?${stringify(params)}`, {
+    method: "GET",
+    headers: {
+      'content-type': 'application/json'
+    }
   });
 }
 
 
 export async function deleteExpenses(params) {
   return request(`/api/friday/bills/userExpenses/delete?${stringify(params)}`, {
+    method: "GET"
+  });
+}
+
+export async function findType() {
+  return request(`/api/friday/bills/userExpenses/findType`, {
     method: "GET"
   });
 }

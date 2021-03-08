@@ -1,13 +1,17 @@
 package com.friday.bills.controller;
 
+import com.friday.bills.client.UserClient;
 import com.friday.bills.entity.UserExpenses;
 import com.friday.bills.service.UserExpensesService;
+import com.friday.common.utils.TimeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 
@@ -25,6 +29,9 @@ public class UserExpensesController {
      */
     @Resource
     private UserExpensesService userExpensesService;
+
+    @Autowired
+    private UserClient userClient;
 
     /**
      * 通过主键查询单条数据
@@ -56,10 +63,12 @@ public class UserExpensesController {
             userExpenses.setOffset(offset);
         }
 
-        if (StringUtils.isNotBlank(userExpenses.getExpensesTime())){
+        if (StringUtils.isNotBlank(userExpenses.getExpensesTime()) && !",".equals(userExpenses.getExpensesTime())){
             String[] split = StringUtils.split(userExpenses.getExpensesTime(), ',');
             userExpenses.setDate1(split[0].replaceAll("-",""));
             userExpenses.setDate2(split[1].replaceAll("-",""));
+        }else {
+            userExpenses.setExpensesTime(null);
         }
         userExpenses.setLimit(limit);
         PageInfo<UserExpenses> allData = userExpensesService.queryAllByEntity(userExpenses);
@@ -71,14 +80,25 @@ public class UserExpensesController {
 
 
 
+    @GetMapping("findType")
+    public ResponseEntity<List<String>> findType(){
+        List<String> list = userExpensesService.findType();
+        return ResponseEntity.ok(list);
+    }
+
+
+
     /**
      * 新增数据
      *
      * @param  userExpenses
      * @return Void
      */
-    @PostMapping("insert")
-    public ResponseEntity<Void> insert(@RequestBody UserExpenses userExpenses){
+    @GetMapping("insert")
+    public ResponseEntity<Void> insert(UserExpenses userExpenses){
+        userExpenses.setExpensesTime(TimeUtils.getCurrentDateString("YYYYMMdd"));
+        Integer userId = userClient.findId(userExpenses.getExpensesUser()).getUserId();
+        userExpenses.setExpensesUserId(String.valueOf(userId));
         userExpensesService.insert(userExpenses);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -109,6 +129,19 @@ public class UserExpensesController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         userExpensesService.update(userExpenses);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 下载数据
+     *
+     * @param
+     * @return Void
+     */
+    @GetMapping("downloadExpenses")
+    public ResponseEntity<Void> downloadExpenses(UserExpenses userExpenses){
+        //todo
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

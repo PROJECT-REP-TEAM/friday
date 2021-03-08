@@ -53,4 +53,5 @@ public interface UserExpensesService {
      */
     boolean deleteById(Integer expensesId);
 
+    List<String> findType();
 }

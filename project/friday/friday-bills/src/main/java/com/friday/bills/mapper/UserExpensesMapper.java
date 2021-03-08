@@ -54,4 +54,5 @@ public interface UserExpensesMapper {
      */
     int deleteById(Integer expensesId);
 
+    List<String> findType();
 }

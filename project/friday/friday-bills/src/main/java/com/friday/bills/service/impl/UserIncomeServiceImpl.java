@@ -82,4 +82,9 @@ public class UserIncomeServiceImpl implements UserIncomeService {
     public boolean deleteById(Integer incomeId) {
         return this.userIncomeMapper.deleteById(incomeId) > 0;
     }
+
+    @Override
+    public List<String> findType() {
+        return userIncomeMapper.findType();
+    }
 }

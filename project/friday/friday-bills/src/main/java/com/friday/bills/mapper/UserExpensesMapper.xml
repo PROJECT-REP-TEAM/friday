@@ -49,7 +49,12 @@
                 and expenses_user = #{expensesUser}
             </if>
         </where>
-        order by expenses_time desc
+        order by expenses_time desc,expenses_id desc
+    </select>
+    <select id="findType" resultType="java.lang.String">
+        select expenses_sort
+        from user_expenses
+        group by expenses_sort
     </select>
 
     <!--新增所有列-->

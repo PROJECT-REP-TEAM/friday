@@ -42,6 +42,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         return this.userInfoMapper.queryAllByLimit(offset, limit);
     }
 
+    @Override
+    public UserInfo findOne(UserInfo userInfo) {
+        return userInfoMapper.queryId(userInfo);
+    }
+
     /**
      * 新增数据
      *

@@ -68,4 +68,6 @@ public interface UserInfoMapper {
     int deleteById(Integer userId);
 
     UserInfo selectOne(String username);
+
+    UserInfo queryId(UserInfo userInfo);
 }
