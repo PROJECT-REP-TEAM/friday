@@ -4,6 +4,7 @@ import {
   insertExpenses ,
   deleteExpenses ,
   findType ,
+  outputFile,
 
 } from "@/services/friday/bills/Expenses";
 
@@ -66,7 +67,9 @@ export default {
         });
         callback(response)
     },
+
   },
+
 
   reducers: {
     /**
@@ -109,5 +112,6 @@ export default {
         data: action.payload
       };
     },
+
   }
 };

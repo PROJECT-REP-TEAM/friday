@@ -2,7 +2,9 @@ package com.friday.bills.service;
 
 import com.friday.bills.entity.UserIncome;
 import com.github.pagehelper.PageInfo;
+import jxl.write.WriteException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -55,4 +57,6 @@ public interface UserIncomeService {
     boolean deleteById(Integer incomeId);
 
     List<String> findType();
+
+    void downloadFile(UserIncome userIncome) throws IOException, WriteException;
 }

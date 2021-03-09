@@ -30,7 +30,7 @@
                 and income_id = #{incomeId}
             </if>
             <if test="incomeTime != null and incomeTime != ''">
-                and income_time = #{incomeTime}
+                and income_time between #{date1} and #{date2}
             </if>
             <if test="incomeNum != null and incomeNum != ''">
                 and income_num = #{incomeNum}

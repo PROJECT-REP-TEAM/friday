@@ -4,12 +4,15 @@ import com.friday.bills.client.UserClient;
 import com.friday.bills.entity.UserExpenses;
 import com.friday.bills.service.UserExpensesService;
 import com.friday.common.utils.TimeUtils;
+import jxl.write.WriteException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,9 +142,16 @@ public class UserExpensesController {
      * @return Void
      */
     @GetMapping("downloadExpenses")
-    public ResponseEntity<Void> downloadExpenses(UserExpenses userExpenses){
+    public ResponseEntity<Void> downloadExpenses(UserExpenses userExpenses) throws IOException, WriteException {
         //todo
-
+        if (StringUtils.isNotBlank(userExpenses.getExpensesTime()) && !",".equals(userExpenses.getExpensesTime()) ){
+            String[] split = StringUtils.split(userExpenses.getExpensesTime(), ',');
+            userExpenses.setDate1(split[0].replaceAll("-",""));
+            userExpenses.setDate2(split[1].replaceAll("-",""));
+        }else {
+            userExpenses.setExpensesTime(null);
+        }
+        userExpensesService.downloadFile(userExpenses);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

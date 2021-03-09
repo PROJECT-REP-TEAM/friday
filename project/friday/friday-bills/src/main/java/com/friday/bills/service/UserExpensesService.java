@@ -1,9 +1,12 @@
 package com.friday.bills.service;
 
 import com.friday.bills.entity.UserExpenses;
+
+import java.io.IOException;
 import java.util.List;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import jxl.write.WriteException;
 
 /**
  * (UserExpenses)表服务接口
@@ -54,4 +57,6 @@ public interface UserExpensesService {
     boolean deleteById(Integer expensesId);
 
     List<String> findType();
+
+    void downloadFile(UserExpenses userExpenses) throws IOException, WriteException;
 }

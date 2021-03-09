@@ -338,6 +338,7 @@ class EditableTableExpenses extends React.Component {
 
   };
 
+
   sub = (param) => {
     const { dispatch } = this.props;
     dispatch({
@@ -462,7 +463,8 @@ class EditableTableExpenses extends React.Component {
             <Button type="primary" icon="add" style={{ marginLeft: '0.3rem', float: 'right' }} onClick={this.showModal}>
               添加
             </Button>
-            <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}>
+            <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}
+                    onClick={()=>{location.href = 'http://localhost:10010/friday/bills/userExpenses/downloadExpenses?expensesTime='+param.expensesTime}}>
               下载
             </Button>
           </Col>

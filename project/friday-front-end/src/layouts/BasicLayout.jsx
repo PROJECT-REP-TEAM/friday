@@ -43,7 +43,7 @@ const defaultFooterDom = (
       {
         key: 'Friday',
         title: 'Friday 家庭理财系统',
-        href: '',
+        href: 'https://gitee.com/Ezer_Wu/friday',
         blankTarget: true,
       },
       // {

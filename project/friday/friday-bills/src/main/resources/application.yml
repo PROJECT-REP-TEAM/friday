@@ -25,3 +25,6 @@ eureka:
 logging:
   level:
     com.friday.bills.mapper : TRACE
+
+friday:
+  location: F:/file/mail/

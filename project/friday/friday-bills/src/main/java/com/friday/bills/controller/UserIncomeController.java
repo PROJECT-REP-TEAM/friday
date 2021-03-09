@@ -1,10 +1,12 @@
 package com.friday.bills.controller;
 
 import com.friday.bills.client.UserClient;
+import com.friday.bills.entity.UserExpenses;
 import com.friday.bills.entity.UserIncome;
 import com.friday.bills.service.UserIncomeService;
 import com.friday.common.utils.TimeUtils;
 import com.github.pagehelper.PageInfo;
+import jxl.write.WriteException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,5 +130,25 @@ public class UserIncomeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+
+    /**
+     * 下载数据
+     *
+     * @param
+     * @return Void
+     */
+    @GetMapping("downloadIncome")
+    public ResponseEntity<Void> downloadIncome(UserIncome userIncome) throws IOException, WriteException {
+        //todo
+        if (StringUtils.isNotBlank(userIncome.getIncomeTime()) && !",".equals(userIncome.getIncomeTime()) ){
+            String[] split = StringUtils.split(userIncome.getIncomeTime(), ',');
+            userIncome.setDate1(split[0].replaceAll("-",""));
+            userIncome.setDate2(split[1].replaceAll("-",""));
+        }else {
+            userIncome.setIncomeTime(null);
+        }
+        userIncomeService.downloadFile(userIncome);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }
