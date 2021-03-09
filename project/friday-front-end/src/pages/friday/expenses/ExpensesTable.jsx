@@ -82,13 +82,13 @@ let groupName = [];
 let data = [];
 // 选择分类
 function changeType(value) {
-  console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
+  // console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
   param.expensesSort = value.key;
 }
 
 // 选择时间段
 function onChangeTime(date, dateString) {
-  console.log(dateString.toString());
+  // console.log(dateString.toString());
   param.expensesTime = dateString.toString();
 }
 
@@ -110,7 +110,7 @@ class EditableTableExpenses extends React.Component {
       data: data,
       pagination: {},
       loading: false,
-      visible: false
+      visible: false,
     };
     this.columns = [
       {
@@ -209,11 +209,17 @@ class EditableTableExpenses extends React.Component {
   componentDidMount() {
     this.fetch();
 
-    const { dispatch } = this.props;
-    dispatch({
+    this.props.dispatch({
       type: `${namespace}/findType`,
-
-    });
+      callback: (data)=>{
+          console.log(data);
+        groupSelect = [];
+        groupName = data;
+        for (let i = 0; i < groupName.length; i++) {
+          groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
+        }
+      }
+    })
   }
 
   // 变换条件发送请求
@@ -232,7 +238,7 @@ class EditableTableExpenses extends React.Component {
 
   // 发送请求
   fetch = (params = {}) => {
-    console.log('params:', params);
+    // console.log('params:', params);
     this.setState({ loading: true });
     reqwest({
       url: 'http://localhost:10010/friday/bills/userExpenses/selectAll',
@@ -293,7 +299,7 @@ class EditableTableExpenses extends React.Component {
           break;
         }
       }
-      console.log(data);
+      // console.log(data);
       this.setState({
         editingKey: '',
         data:data,});
@@ -306,7 +312,7 @@ class EditableTableExpenses extends React.Component {
   }
 
   delete(key) {
-    console.log(key);
+    // console.log(key);
     const { dispatch } = this.props;
     dispatch({
       type: `${namespace}/deleteExpenses`,
@@ -329,11 +335,7 @@ class EditableTableExpenses extends React.Component {
     this.setState({
       visible: true,
     });
-    groupName = this.props.data;
-    groupSelect = [];
-    for (let i = 0; i < groupName.length; i++) {
-      groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
-    }
+
   };
 
   sub = (param) => {
@@ -351,11 +353,11 @@ class EditableTableExpenses extends React.Component {
   //增加模态框提交
   handleOk = e => {
     let isEmpty = true;
-    console.log(e);
+    // console.log(e);
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        // console.log('Received values of form: ', values);
       }
       if (values["expensesUser"]!=null && values["expensesUser"] !== ""&&values["expensesSort"]!=null && values["expensesSort"] !== "" && values["expensesUser"]!=null && values["expensesUser"] !== ""){
         isEmpty = false;
@@ -376,7 +378,7 @@ class EditableTableExpenses extends React.Component {
 
   // 关闭模态框
   handleCancel = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
@@ -428,14 +430,7 @@ class EditableTableExpenses extends React.Component {
                 onChange={changeType}
               >
                 <Option value="">全部</Option>
-                <Option value="交通">交通</Option>
-                <Option value="饮食">饮食</Option>
-                <Option value="烟酒">烟酒</Option>
-                <Option value="人情">人情</Option>
-                <Option value="学习">学习</Option>
-                <Option value="设备">设备</Option>
-                <Option value="家居">家居</Option>
-                <Option value="其他">其他</Option>
+                {groupSelect}
               </Select>
             </div>
 

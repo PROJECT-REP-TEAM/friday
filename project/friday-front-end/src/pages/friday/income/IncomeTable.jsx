@@ -77,8 +77,8 @@ let param = {
   incomeSort: '',
 };
 
-let groupSelect = [];
-let groupName = [];
+let groupSelectList = [];
+let groupNameList = [];
 let data = [];
 // 选择分类
 function changeType(value) {
@@ -209,11 +209,18 @@ class EditableTableIncome extends React.Component {
   componentDidMount() {
     this.fetch();
 
-    const { dispatch } = this.props;
-    dispatch({
-      type: `${namespace}/findType`,
+    this.props.dispatch({
+      type: `${namespace}/findTypeName`,
+      callback: (data)=>{
+        console.log(data);
+        groupSelectList = [];
+        groupNameList = data;
+        for (let i = 0; i < groupNameList.length; i++) {
+          groupSelectList.push(<Select.Option value={groupNameList[i]} key={i}>{groupNameList[i]}</Select.Option>)
+        }
+      }
+    })
 
-    });
   }
 
   // 变换条件发送请求
@@ -329,11 +336,6 @@ class EditableTableIncome extends React.Component {
     this.setState({
       visible: true,
     });
-    groupName = this.props.data;
-    groupSelect = [];
-    for (let i = 0; i < groupName.length; i++) {
-      groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
-    }
   };
 
   sub = (param) => {
@@ -428,14 +430,7 @@ class EditableTableIncome extends React.Component {
                 onChange={changeType}
               >
                 <Option value="">全部</Option>
-                <Option value="交通">交通</Option>
-                <Option value="饮食">饮食</Option>
-                <Option value="烟酒">烟酒</Option>
-                <Option value="人情">人情</Option>
-                <Option value="学习">学习</Option>
-                <Option value="设备">设备</Option>
-                <Option value="家居">家居</Option>
-                <Option value="其他">其他</Option>
+                {groupSelectList}
               </Select>
             </div>
 
@@ -514,7 +509,7 @@ class EditableTableIncome extends React.Component {
                 <Select
                   placeholder="选择{其它}后可以自行填写"
                 >
-                  {groupSelect}
+                  {groupSelectList}
                   <Select.Option value={999} key={999}>其他</Select.Option>
                 </Select>
               )}

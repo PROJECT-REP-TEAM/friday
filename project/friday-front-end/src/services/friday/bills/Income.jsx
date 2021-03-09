@@ -34,7 +34,7 @@ export async function deleteIncome(params) {
   });
 }
 
-export async function findType() {
+export async function findTypeName() {
   return request(`/api/friday/bills/userIncome/findType`, {
     method: "GET"
   });

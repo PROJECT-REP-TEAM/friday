@@ -3,7 +3,7 @@ import {
   updateIncome ,
   insertIncome ,
   deleteIncome ,
-  findType ,
+  findTypeName ,
 
 } from "@/services/friday/bills/Income";
 
@@ -58,12 +58,14 @@ export default {
       });
     },
 
-    *findType({ payload }, { call, put }) {
-      const response = yield call(findType, payload);
+    *findTypeName({ payload,callback }, { call, put }) {
+      const response = yield call(findTypeName, payload);
       yield put({
-        type: "findGroup",
+        type: "findGroupName",
         payload: response
       });
+      callback(response)
+
     },
   },
 
@@ -102,7 +104,7 @@ export default {
       };
     },
 
-    findGroup(state, action) {
+    findGroupName(state, action) {
       return {
         ...state,
         data: action.payload

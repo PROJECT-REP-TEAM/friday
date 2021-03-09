@@ -58,12 +58,13 @@ export default {
       });
     },
 
-    *findType({ payload }, { call, put }) {
+    *findType({ payload,callback }, { call, put }) {
       const response = yield call(findType, payload);
-      yield put({
-        type: "findGroup",
-        payload: response
-      });
+        yield put({
+          type: "findGroup",
+          payload: response
+        });
+        callback(response)
     },
   },
 
