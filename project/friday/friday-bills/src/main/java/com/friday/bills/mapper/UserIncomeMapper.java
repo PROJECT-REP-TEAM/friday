@@ -3,6 +3,7 @@ package com.friday.bills.mapper;
 import com.friday.bills.entity.UserIncome;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (UserIncome)表数据库访问层
@@ -57,4 +58,11 @@ public interface UserIncomeMapper {
     List<String> findType();
 
 
+    String incomeTotal(String date1);
+
+    List<Map> incomeIncomeList(String date1);
+
+    List<Map> incomeGroup(String date1);
+
+    String todayIncome(String incomeTime);
 }

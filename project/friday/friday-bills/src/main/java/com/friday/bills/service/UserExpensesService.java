@@ -4,6 +4,8 @@ import com.friday.bills.entity.UserExpenses;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jxl.write.WriteException;
@@ -59,4 +61,7 @@ public interface UserExpensesService {
     List<String> findType();
 
     void downloadFile(UserExpenses userExpenses) throws IOException, WriteException;
+
+    Map<String, Object> getMonthExpenses(UserExpenses userExpenses);
+
 }

@@ -39,4 +39,11 @@ export async function findTypeName() {
     method: "GET"
   });
 }
+
+export async function getIncomeCollection(params) {
+  return request(`/api/friday/bills/userIncome/getIncomeCollection?${stringify(params)}`, {
+    method: "GET"
+  });
+}
+
 // http://localhost:10010/friday/bills/userExpenses/selectAll

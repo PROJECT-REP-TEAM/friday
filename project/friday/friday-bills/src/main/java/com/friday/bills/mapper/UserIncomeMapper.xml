@@ -51,10 +51,43 @@
         order by income_time desc,income_id desc
     </select>
 
+<!--    查找分类-->
     <select id="findType" resultType="java.lang.String">
         select income_sort
         from user_income
         group by income_sort
+    </select>
+
+<!--    收入总数-->
+    <select id="incomeTotal" resultType="java.lang.String">
+        select sum(income_num) as incomeTotal
+        from user_income where income_time like CONCAT(#{date1},'%')
+    </select>
+
+<!--    收入曲线图-->
+    <select id="incomeIncomeList" resultType="java.util.Map">
+      select income_time as incomeTime,
+      SUM(income_num) as num
+      from user_income
+      where income_time like  CONCAT(#{date1},'%')
+      group by income_time order by incomeTime asc
+    </select>
+
+<!--    收入分类-->
+    <select id="incomeGroup" resultType="java.util.Map">
+        select
+        income_sort as name,
+        SUM(income_num) as value
+        from user_income
+        where income_time like CONCAT(#{date1},'%')
+        group by income_sort order by value desc
+
+    </select>
+
+<!--    今日收入-->
+    <select id="todayIncome" resultType="java.lang.String">
+        select sum(income_num) as todayIncome
+        from user_income where income_time like CONCAT(#{incomeTime},'%')
     </select>
 
     <!--新增所有列-->

@@ -16,7 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -161,5 +164,34 @@ public class UserExpensesServiceImpl implements UserExpensesService {
         response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
         File file = new File(filePath);
         Files.copy(file.toPath(), response.getOutputStream());
+    }
+
+
+
+    /**
+     * @Description: 支出统计视图，根据参数不同查询本年、月、日
+     * @Param:  userExpenses
+     * @return:  map
+     * @Author: XinWei Wu
+     * @Date: 2021/3/10
+     */
+    @Override
+    public Map<String, Object> getMonthExpenses(UserExpenses userExpenses) {
+        Map<String,Object> map = new HashMap<>();
+//        支出总额
+        map.put("expensesTotal",userExpensesMapper.expensesTotal(userExpenses.getDate1()));
+
+//        支出曲线图
+        List<Map> timeList = userExpensesMapper.expensesList(userExpenses.getDate1());
+        map.put("expensesList",timeList);
+
+//        支出分类
+        List<Map> group = userExpensesMapper.expensesGroup(userExpenses.getDate1());
+        map.put("expensesGroup",group);
+
+//        今日支出
+        map.put("todayExpenses",userExpensesMapper.todayExpenses(userExpenses.getExpensesTime()));
+        System.out.println(map);
+        return map;
     }
 }

@@ -6,6 +6,7 @@ import jxl.write.WriteException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (UserIncome)表服务接口
@@ -59,4 +60,6 @@ public interface UserIncomeService {
     List<String> findType();
 
     void downloadFile(UserIncome userIncome) throws IOException, WriteException;
+
+    Map<String, Object> getMonthIncome(UserIncome userIncome);
 }

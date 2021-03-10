@@ -151,4 +151,27 @@ public class UserIncomeController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+
+    /**
+    * @Description: 本月收入集合
+    * @Param: flag 年、月区分
+    * @return: Map<String,Object>
+     * incomeTime设置为当前日期，date1设置为本月、年，根据传入参数不同进行区分
+    */
+    @GetMapping("getIncomeCollection")
+    public ResponseEntity<Map<String,Object>> getIncomeCollection(String flag){
+        if (StringUtils.isNotBlank(flag)){
+            UserIncome userIncome = new UserIncome();
+            if ("month".equals(flag)){
+            userIncome.setDate1(TimeUtils.getCurrentDateString("YYYYMM"));
+            }else {
+            userIncome.setDate1(TimeUtils.getCurrentDateString("YYYY"));
+            }
+            userIncome.setIncomeTime(TimeUtils.getCurrentDateString("YYYYMMdd"));
+            Map<String,Object> income = userIncomeService.getMonthIncome(userIncome);
+            return ResponseEntity.ok(income);
+        }else
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
 }

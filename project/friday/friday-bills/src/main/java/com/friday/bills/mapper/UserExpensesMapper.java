@@ -3,6 +3,7 @@ package com.friday.bills.mapper;
 import com.friday.bills.entity.UserExpenses;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (UserExpenses)表数据库访问层
@@ -55,4 +56,12 @@ public interface UserExpensesMapper {
     int deleteById(Integer expensesId);
 
     List<String> findType();
+
+    String expensesTotal(String date1);
+
+    List<Map> expensesList(String date1);
+
+    List<Map> expensesGroup(String date1);
+
+    String todayExpenses(String expensesTime);
 }

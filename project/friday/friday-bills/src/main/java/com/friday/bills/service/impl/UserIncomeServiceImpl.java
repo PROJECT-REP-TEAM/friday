@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (UserIncome)表服务实现类
@@ -163,5 +165,32 @@ public class UserIncomeServiceImpl implements UserIncomeService {
         response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
         File file = new File(filePath);
         Files.copy(file.toPath(), response.getOutputStream());
+    }
+
+    /**
+    * @Description: 支出统计视图，根据参数不同查询本年、月、日
+    * @Param:  userIncome
+    * @return:  map
+    * @Author: XinWei Wu
+    * @Date: 2021/3/10
+    */
+    @Override
+    public Map<String, Object> getMonthIncome(UserIncome userIncome) {
+        Map<String,Object> map = new HashMap<>();
+//        支出总额
+        map.put("incomeTotal",userIncomeMapper.incomeTotal(userIncome.getDate1()));
+
+//        支出曲线图
+        List<Map> timeList = userIncomeMapper.incomeIncomeList(userIncome.getDate1());
+        map.put("incomeIncomeList",timeList);
+
+//        支出分类
+        List<Map> group = userIncomeMapper.incomeGroup(userIncome.getDate1());
+        map.put("incomeGroup",group);
+
+//        今日支出
+        map.put("todayIncome",userIncomeMapper.todayIncome(userIncome.getIncomeTime()));
+        System.out.println(map);
+        return map;
     }
 }

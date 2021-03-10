@@ -4,7 +4,7 @@ import {
   insertExpenses ,
   deleteExpenses ,
   findType ,
-  outputFile,
+  getExpensesCollection,
 
 } from "@/services/friday/bills/Expenses";
 
@@ -68,6 +68,16 @@ export default {
         callback(response)
     },
 
+
+    *getExpensesCollection({ payload,callback }, { call, put }) {
+      const response = yield call(getExpensesCollection, payload);
+      yield put({
+        type: "expensesCollection",
+        payload: response
+      });
+      callback(response)
+    },
+
   },
 
 
@@ -113,5 +123,11 @@ export default {
       };
     },
 
+    expensesCollection(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
   }
 };

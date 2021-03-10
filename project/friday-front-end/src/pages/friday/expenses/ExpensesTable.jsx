@@ -371,6 +371,7 @@ class EditableTableExpenses extends React.Component {
         this.setState({
           visible: false,
         });
+        this.fetch(param);
         message.info('添加成功！');
         this.props.form.resetFields();
       }

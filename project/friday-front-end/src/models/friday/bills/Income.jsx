@@ -4,7 +4,7 @@ import {
   insertIncome ,
   deleteIncome ,
   findTypeName ,
-
+  getIncomeCollection,
 } from "@/services/friday/bills/Income";
 
 export default {
@@ -65,8 +65,17 @@ export default {
         payload: response
       });
       callback(response)
-
     },
+
+    *getIncomeCollection({ payload,callback }, { call, put }) {
+      const response = yield call(getIncomeCollection, payload);
+      yield put({
+        type: "incomeCollection",
+        payload: response
+      });
+      callback(response)
+    },
+
   },
 
   reducers: {
@@ -105,6 +114,13 @@ export default {
     },
 
     findGroupName(state, action) {
+      return {
+        ...state,
+        data: action.payload
+      };
+    },
+
+    incomeCollection(state, action) {
       return {
         ...state,
         data: action.payload

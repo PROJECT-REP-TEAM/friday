@@ -57,6 +57,41 @@
         group by expenses_sort
     </select>
 
+
+
+    <!--    收入总数-->
+    <select id="expensesTotal" resultType="java.lang.String">
+        select sum(expenses_num) as expensesTotal
+        from user_expenses where expenses_time like CONCAT(#{date1},'%')
+    </select>
+
+    <!--    收入曲线图-->
+    <select id="expensesList" resultType="java.util.Map">
+      select expenses_time as expensesTime,
+      SUM(expenses_num) as num
+      from user_expenses
+      where expenses_time like  CONCAT(#{date1},'%')
+      group by expenses_time order by expensesTime asc
+    </select>
+
+    <!--    收入分类-->
+    <select id="expensesGroup" resultType="java.util.Map">
+        select
+        expenses_sort as name,
+        SUM(expenses_num) as value
+        from user_expenses
+        where expenses_time like CONCAT(#{date1},'%')
+        group by expenses_sort order by value desc
+
+    </select>
+
+    <!--    今日收入-->
+    <select id="todayExpenses" resultType="java.lang.String">
+        select sum(expenses_num) as todayexpenses
+        from user_expenses where expenses_time like CONCAT(#{expensesTime},'%')
+    </select>
+
+
     <!--新增所有列-->
     <insert id="insert" keyProperty="expensesId" useGeneratedKeys="true">
         insert into friday.user_expenses(expenses_time, expenses_num, expenses_sort, expenses_remark, expenses_user_id, expenses_user)

@@ -39,4 +39,10 @@ export async function findType() {
     method: "GET"
   });
 }
+
+export async function getExpensesCollection(params) {
+  return request(`/api/friday/bills/userExpenses/getExpensesCollection?${stringify(params)}`, {
+    method: "GET"
+  });
+}
 // http://localhost:10010/friday/bills/userExpenses/selectAll

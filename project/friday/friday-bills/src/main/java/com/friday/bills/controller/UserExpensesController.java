@@ -154,4 +154,29 @@ public class UserExpensesController {
         userExpensesService.downloadFile(userExpenses);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
+
+
+    /**
+     * @Description: 本月收入集合
+     * @Param: flag 年、月区分
+     * @return: Map<String,Object>
+     * ExpensesTime设置为当前日期，date1设置为本月、年，根据传入参数不同进行区分
+     */
+    @GetMapping("getExpensesCollection")
+    public ResponseEntity<Map<String,Object>> getExpensesCollection(String flag){
+        if (StringUtils.isNotBlank(flag)){
+            UserExpenses userExpenses = new UserExpenses();
+            if ("month".equals(flag)){
+                userExpenses.setDate1(TimeUtils.getCurrentDateString("YYYYMM"));
+            }else {
+                userExpenses.setDate1(TimeUtils.getCurrentDateString("YYYY"));
+            }
+            userExpenses.setExpensesTime(TimeUtils.getCurrentDateString("YYYYMMdd"));
+            Map<String,Object> expenses = userExpensesService.getMonthExpenses(userExpenses);
+            return ResponseEntity.ok(expenses);
+        }else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
