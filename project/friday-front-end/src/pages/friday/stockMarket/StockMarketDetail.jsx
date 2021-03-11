@@ -423,7 +423,7 @@ export default class ExpensesIndex extends React.Component{
 
     const dayOption =  {
       title: {
-        text: '基金详情曲线图'
+        text: '股市详情曲线图'
       },
       tooltip: {
         trigger: 'axis'

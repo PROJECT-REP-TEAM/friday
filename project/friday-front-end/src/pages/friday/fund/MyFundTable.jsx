@@ -12,6 +12,7 @@ for (let i = 0; i < 100; i++) {
     address: `London Park no. ${i}`,
   });
 }
+
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -62,61 +63,74 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data, editingKey: '' };
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let code = params.get("code") != null ? params.get("code") : null;
+    let visit = params.get("visit") != null ? params.get("visit") : null;
+    let type = params.get("type") != null ? params.get("type") : null;
+    let netWorth = params.get("netWorth") != null ? params.get("netWorth") : null;
+    let dayGrowth = params.get("dayGrowth") != null ? params.get("dayGrowth") : null;
+    console.log(code);
+    console.log(visit);
+    console.log(type);
+    console.log(netWorth);
+    console.log(dayGrowth);
+
+    this.state = {
+      data,
+      editingKey: '' ,
+      code: code,
+      visit: visit,
+      type: type,
+      netWorth: netWorth,
+      dayGrowth: dayGrowth
+    };
     this.columns = [
       {
-        title: 'name',
-        dataIndex: 'name',
-        width: '25%',
-        editable: true,
+        title: '序号',
+        dataIndex: 'fundId',
       },
       {
-        title: 'age',
-        dataIndex: 'age',
-        width: '15%',
-        editable: true,
+        title: '基金代码',
+        dataIndex: 'fundCode',
       },
       {
-        title: 'address',
-        dataIndex: 'address',
-        width: '40%',
-        editable: true,
+        title: '基金名称',
+        dataIndex: 'fundName',
       },
       {
-        title: 'operation',
+        title: '基金类型',
+        dataIndex: 'fundType',
+      },
+      {
+        title: '单位净值',
+        dataIndex: 'netWorth',
+      },
+      {
+        title: '原始买入费率',
+        dataIndex: 'buySourceRate',
+      },
+      {
+        title: '当前买入费率',
+        dataIndex: 'buyRate',
+      },
+      {
+        title: '基金经理',
+        dataIndex: 'manager',
+      },{
+        title: '每万分收益(货币基金)',
+        dataIndex: 'millionCopiesIncome',
+      },
+      {
+        title: '操作',
         dataIndex: 'operation',
         render: (text, record) => {
           const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <a
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </a>
-                )}
-              </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                <a>Cancel</a>
-              </Popconfirm>
-            </span>
-          ) : (
+          return (
             <div>
-              <Button type="primary" shape="round" icon="download" size={'default'} onClick={() => this.edit(record.key)}>
-                编辑
-              </Button>
-
-              <Button type="danger" shape="round" icon="download" size={'default'} onClick={() => this.delete(record.key)}>
+              <Button type="danger" shape="round" icon="delete" size={'default'} onClick={() => this.delete(record.key)}>
                 删除
               </Button>
-
             </div>
-
-
           );
         },
       },
@@ -228,11 +242,8 @@ export default class MyFundTable extends React.Component{
 
         <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
           <Col span={24}>
-            <Button type="primary" icon="add" style={{marginLeft :'0.3rem',float:'right'}}>
-              添加
-            </Button>
             <Button type="primary" icon="download" style={{marginLeft :'0.3rem',float:'right'}}>
-              下载
+              导出当前收藏
             </Button>
           </Col>
 

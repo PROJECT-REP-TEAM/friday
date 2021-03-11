@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,6 +36,9 @@ public class UserExpensesController {
 
     @Autowired
     private UserClient userClient;
+
+    @Autowired
+    private RestTemplate rest;
 
     /**
      * 通过主键查询单条数据
@@ -77,6 +81,10 @@ public class UserExpensesController {
         PageInfo<UserExpenses> allData = userExpensesService.queryAllByEntity(userExpenses);
         map.put("count",allData.getTotal());
         map.put("data",allData.getList());
+
+
+
+//        CCCC c = rest.getForObject("",CCCC.class);
         return ResponseEntity.ok(map);
 
     }

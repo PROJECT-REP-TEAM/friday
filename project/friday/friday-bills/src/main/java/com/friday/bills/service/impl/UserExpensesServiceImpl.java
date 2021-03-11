@@ -187,7 +187,7 @@ public class UserExpensesServiceImpl implements UserExpensesService {
 
 //        支出分类
         List<Map> group = userExpensesMapper.expensesGroup(userExpenses.getDate1());
-        map.put("expensesGroup",group);
+
 
 //        今日支出
         map.put("todayExpenses",userExpensesMapper.todayExpenses(userExpenses.getExpensesTime()));

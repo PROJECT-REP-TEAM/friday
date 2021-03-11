@@ -1,7 +1,6 @@
 import React from 'react';
 import { Select ,Row ,Col , Button, Tooltip, Table} from 'antd';
 import reqwest from 'reqwest';
-import {hashHistory} from 'react-router';
 
 const columns = [
   {
@@ -145,8 +144,6 @@ export default class FundRank extends React.Component{
   click(record,rowkey){
 
     console.log(record.code);
-
-    // console.log(rowkey);
 
     this.props.history.push({ pathname : '/fund/FundDetail' , query : { code : record.code }})
   }

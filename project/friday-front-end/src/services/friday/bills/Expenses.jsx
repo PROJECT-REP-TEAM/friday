@@ -45,4 +45,4 @@ export async function getExpensesCollection(params) {
     method: "GET"
   });
 }
-// http://localhost:10010/friday/bills/userExpenses/selectAll
+

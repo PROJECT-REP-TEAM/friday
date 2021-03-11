@@ -124,7 +124,7 @@ export default class ExpensesIndex extends React.Component{
         flag: "year",
         listName: "本年支出曲线图",
         groupSort: "本年支出饼状图",
-        top1: "今年支出",
+        top1: "今日支出",
         top2: "本年支出",
         top3: "较大支出分类",
         top4:"查看本月",

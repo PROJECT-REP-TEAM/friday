@@ -5,6 +5,8 @@ import 'echarts/lib/chart/bar';
 // 引入标题和提示框
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
+import Button from "antd/es/button";
+
 import reqwest from "reqwest";
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -83,6 +85,23 @@ export default class FundDetail extends React.Component{
     });
   };
 
+  jump = () =>{
+    let data = this.state.data;
+    this.props.history.push({
+      pathname : '/fund/MyFundTable' ,
+      query : {
+        code: data.code ,
+        visit: true,
+        type: data.type,
+        netWorth: data.netWorth,
+        dayGrowth: data.dayGrowth
+      }})
+    /*
+    * data.type
+    * data.netWorth
+    * data.dayGrowth
+    * */
+  };
 
   render() {
     const date = this.state.netWorthData.timeList;
@@ -159,6 +178,7 @@ export default class FundDetail extends React.Component{
               <Card.Grid style={gridStyle}>{"近三个月" + data.lastThreeMonthsGrowth + "%"}</Card.Grid>
               <Card.Grid style={gridStyle}>{"近六个月" + data.lastSixMonthsGrowth + "%"}</Card.Grid>
               <Card.Grid style={gridStyle}>{"近一年" + data.lastYearGrowth + "%"}</Card.Grid>
+              <Card.Grid style={gridStyle}><Button onClick={this.jump} size={"small"} >已购买该方案</Button></Card.Grid>
             </Card>
 
             <Tabs defaultActiveKey="1" style={{textAlign:'center',width:'70%',float:'right',minWidth:'300px',marginTop:'1rem'}} >
