@@ -37,8 +37,8 @@ public class UserExpensesController {
     @Autowired
     private UserClient userClient;
 
-    @Autowired
-    private RestTemplate rest;
+//    @Autowired
+//    private RestTemplate rest;
 
     /**
      * 通过主键查询单条数据

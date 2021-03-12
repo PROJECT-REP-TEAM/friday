@@ -54,4 +54,5 @@ public interface UserFundMapper {
      */
     int deleteById(Integer fundId);
 
+    List<String> findType();
 }

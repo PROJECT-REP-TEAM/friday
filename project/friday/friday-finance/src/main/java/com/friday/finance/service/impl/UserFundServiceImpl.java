@@ -81,4 +81,9 @@ public class UserFundServiceImpl implements UserFundService {
     public boolean deleteById(Integer fundId) {
         return this.userFundMapper.deleteById(fundId) > 0;
     }
+
+    @Override
+    public List<String> findType() {
+        return userFundMapper.findType();
+    }
 }

@@ -53,4 +53,5 @@ public interface UserFundService {
      */
     boolean deleteById(Integer fundId);
 
+    List<String> findType();
 }

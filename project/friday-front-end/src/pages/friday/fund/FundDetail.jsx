@@ -1,5 +1,6 @@
 import React from 'react';
-import {Tabs, Input, Row, Col, Card } from 'antd';
+import {Tabs, Input, Row, Col, Card , message,
+} from 'antd';
 //引入echarts主模块
 import 'echarts/lib/chart/bar';
 // 引入标题和提示框
@@ -11,6 +12,9 @@ import reqwest from "reqwest";
 const { TabPane } = Tabs;
 const { Search } = Input;
 import ReactEcharts from 'echarts-for-react';
+import { connect } from 'dva';
+
+const namespace = 'fundMSG';
 
 const gridStyle = {
   width: '100%',
@@ -36,6 +40,10 @@ function splitData(rawData) {
   };
 }
 
+@connect(({ fundMSG: fundMSG, loading }) => ({
+  data: fundMSG.data, // 将data赋值给
+  loading: loading
+}))
 export default class FundDetail extends React.Component{
   constructor(props) {
     super(props);
@@ -87,15 +95,31 @@ export default class FundDetail extends React.Component{
 
   jump = () =>{
     let data = this.state.data;
-    this.props.history.push({
-      pathname : '/fund/MyFundTable' ,
-      query : {
-        code: data.code ,
-        visit: true,
-        type: data.type,
-        netWorth: data.netWorth,
-        dayGrowth: data.dayGrowth
-      }})
+    data.fundCode = data.code;
+    data.netWorthData = this.state.netWorthData;
+    data.fundName = data.name;
+    data.fundType = data.type;
+    console.log(data);
+
+    this.props.dispatch({
+      type: `${namespace}/insertFund`,
+      payload: {
+        ...data
+      },
+      callback: (data)=>{
+        console.log(data);
+        message.info("添加成功！");
+      }
+    })
+    // this.props.history.push({
+    //   pathname : '/fund/MyFundTable' ,
+    //   query : {
+    //     code: data.code ,
+    //     visit: true,
+    //     type: data.type,
+    //     netWorth: data.netWorth,
+    //     dayGrowth: data.dayGrowth
+    //   }})
     /*
     * data.type
     * data.netWorth

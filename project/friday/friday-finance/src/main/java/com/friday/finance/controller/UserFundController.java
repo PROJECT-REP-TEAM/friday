@@ -2,11 +2,13 @@ package com.friday.finance.controller;
 
 import com.friday.finance.entity.UserFund;
 import com.friday.finance.service.UserFundService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 
@@ -47,13 +49,16 @@ public class UserFundController {
     @GetMapping("selectAll")
     public ResponseEntity<Map<String,Object>> selectAll(Integer offset ,Integer limit , UserFund userFund){
         Map<String,Object> map = new HashMap<>();
-        userFund.setOffset(offset);
+        if (offset == null || offset == 0){
+            userFund.setOffset(1);
+        }else{
+            userFund.setOffset(offset);
+        }
         userFund.setLimit(limit);
         PageInfo<UserFund> allData = userFundService.queryAllByEntity(userFund);
         map.put("count",allData.getTotal());
         map.put("data",allData.getList());
         return ResponseEntity.ok(map);
-
     }
 
 
@@ -94,5 +99,12 @@ public class UserFundController {
     public ResponseEntity<Void> update(@RequestBody UserFund userFund){
         userFundService.update(userFund);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    @GetMapping("findType")
+    public ResponseEntity<List<String>> findType(){
+        List<String> list = userFundService.findType();
+        return ResponseEntity.ok(list);
     }
 }

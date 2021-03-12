@@ -58,6 +58,9 @@
             </if>
         </where>
     </select>
+    <select id="findType" resultType="java.lang.String">
+        select fund_type from friday.user_fund group by fund_type
+    </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="fundId" useGeneratedKeys="true">

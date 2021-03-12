@@ -152,8 +152,7 @@ export default class ExpensesIndex extends React.Component{
         flag: flag
       },
       callback: (data) =>{
-        console.log(data);
-        let timeList = [], timeSum = [], top3Data = "",percent;
+        let timeList = [], timeSum = [], top3Data = "",percent = 0;
         for (let i = 0; i < data.expensesList.length; i++) {
           timeList[i] = data.expensesList[i].expensesTime;
           timeSum[i] = parseFloat(data.expensesList[i].num);
@@ -161,8 +160,11 @@ export default class ExpensesIndex extends React.Component{
         let avg = parseFloat(data.expensesTotal)/(timeList.length);
         console.log("平均" + avg);
         console.log("今日" + data.todayExpenses);
-        percent = (parseFloat(data.todayExpenses) - avg) / avg;
-        console.log(percent)
+        if (avg === 0 || avg ==null){
+          percent = 0;
+        } else {
+          percent = (parseFloat(data.todayExpenses) - avg) / avg;
+        }
         for (let i = 0; i < 3; i++) {
           top3Data += data.expensesGroup[i].name + "、"
         }
