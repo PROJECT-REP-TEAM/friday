@@ -202,21 +202,21 @@ export default {
             },
 
             {
-              path: '/fixedAssets',
+              path: '/assets',
               name: '固定资产',
               icon: 'car',
               routes: [
                 {
-                  path: '/fixedAssets/FixedAssetsIndex',
+                  path: '/assets/AssetsIndex',
                   name: '我的资产',
                   icon: 'property-safety',
-                  component: './friday/fixedAssets/FixedAssetsIndex',
+                  component: './friday/assets/AssetsIndex',
                 },
                 {
-                  path: '/fixedAssets/FixedAssetsTable',
+                  path: '/assets/AssetsTable',
                   name: '资产详情',
                   icon: 'reconciliation',
-                  component: './friday/fixedAssets/FixedAssetsTable',
+                  component: './friday/Assets/AssetsTable',
                 },
               ],
             },

@@ -15,7 +15,7 @@ public class FridayCorsConfiguration {
         CorsConfiguration config = new CorsConfiguration();
 //        允许的域，写*则cookie无法使用，且所有域名都能够访问
         config.addAllowedOrigin("*");
-//        config.addAllowedOrigin("http://www.leyou.com");
+//        config.addAllowedOrigin("http://www.xxx.com");
 //        是否发送Cookie请求
         config.setAllowCredentials(true);
 //        允许的请求方式,*代表全部允许

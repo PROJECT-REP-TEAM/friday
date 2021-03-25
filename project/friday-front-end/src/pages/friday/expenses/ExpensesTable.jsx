@@ -485,7 +485,7 @@ class EditableTableExpenses extends React.Component {
         </EditableContext.Provider>
 
         <Modal
-          title="Basic Modal"
+          title="添加支出"
           visible={this.state.visible}
           bodyStyle={{width:'auto',height:'300px'}}
           onOk={this.handleOk}

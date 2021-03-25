@@ -205,7 +205,7 @@ const {  RangePicker } = DatePicker;
 function onChange(date, dateString) {
   console.log(date, dateString);
 }
-export default class FixedAssetsTable extends React.Component{
+export default class AssetsTable extends React.Component{
 
   render() {
     return(

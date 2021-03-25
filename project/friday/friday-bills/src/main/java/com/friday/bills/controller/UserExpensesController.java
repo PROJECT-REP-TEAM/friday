@@ -81,12 +81,7 @@ public class UserExpensesController {
         PageInfo<UserExpenses> allData = userExpensesService.queryAllByEntity(userExpenses);
         map.put("count",allData.getTotal());
         map.put("data",allData.getList());
-
-
-
-//        CCCC c = rest.getForObject("",CCCC.class);
         return ResponseEntity.ok(map);
-
     }
 
 

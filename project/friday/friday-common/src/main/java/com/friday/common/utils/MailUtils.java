@@ -14,12 +14,12 @@ public final class MailUtils {
 
     /**
      *
-     * @param to 收件人邮箱
-     * @param text 邮件正文
+     * @param toC 收件人邮箱
+     * @param content 邮件正文
      * @param title 标题
      */
     /* 发送验证信息的邮件 */
-    public static boolean sendMail(String to, String text, String title){
+    public static boolean sendMail(String toC, String content, String title){
         try {
             final Properties props = new Properties();
             props.put("mail.smtp.auth", "true");
@@ -50,14 +50,14 @@ public final class MailUtils {
             message.setFrom(form);
 
             // 设置收件人
-            InternetAddress toAddress = new InternetAddress(to);
+            InternetAddress toAddress = new InternetAddress(toC);
             message.setRecipient(Message.RecipientType.TO, toAddress);
 
             // 设置邮件标题
             message.setSubject(title);
 
             // 设置邮件的内容体
-            message.setContent(text, "text/html;charset=UTF-8");
+            message.setContent(content, "content/html;charset=UTF-8");
             // 发送邮件
             Transport.send(message);
             return true;

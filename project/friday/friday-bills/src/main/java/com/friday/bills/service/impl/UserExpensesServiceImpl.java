@@ -178,18 +178,11 @@ public class UserExpensesServiceImpl implements UserExpensesService {
     @Override
     public Map<String, Object> getMonthExpenses(UserExpenses userExpenses) {
         Map<String,Object> map = new HashMap<>();
-//        支出总额
         map.put("expensesTotal",userExpensesMapper.expensesTotal(userExpenses.getDate1()));
-
-//        支出曲线图
         List<Map> timeList = userExpensesMapper.expensesList(userExpenses.getDate1());
         map.put("expensesList",timeList);
-
-//        支出分类
         List<Map> group = userExpensesMapper.expensesGroup(userExpenses.getDate1());
         map.put("expensesGroup" ,group);
-
-//        今日支出
         map.put("todayExpenses",userExpensesMapper.todayExpenses(userExpenses.getExpensesTime()));
         System.out.println(map);
         return map;
