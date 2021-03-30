@@ -203,7 +203,7 @@ export default {
 
             {
               path: '/assets',
-              name: '固定资产',
+              name: '我的资产',
               icon: 'car',
               routes: [
                 {

@@ -1,17 +1,29 @@
 import React from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Col, Row, DatePicker } from 'antd';
-import Button from "antd/es/button";
+import {
+  Select,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Table,
+  DatePicker,
+  InputNumber,
+  Input,
+  Form,
+  Popconfirm,
+  message,
+  Checkbox,
+  Icon
+} from 'antd';
+import reqwest from 'reqwest';
 
+import { connect } from 'dva';
 
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+const namespace = 'expensesMSG';
+
+const { Option } = Select;
+const { RangePicker } = DatePicker;
+
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -59,32 +71,94 @@ class EditableCell extends React.Component {
   }
 }
 
-class EditableTable extends React.Component {
+// 初始化值
+let param = {
+  expensesTime: '',
+  expensesSort: '',
+};
+
+let groupSelect = [];
+let groupName = [];
+let data = [];
+// 选择分类
+function changeType(value) {
+  // console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
+  param.expensesSort = value.key;
+}
+
+// 选择时间段
+function onChangeTime(date, dateString) {
+  // console.log(dateString.toString());
+  param.expensesTime = dateString.toString();
+}
+
+
+
+
+
+@connect(({ expensesMSG, loading }) => ({
+  data: expensesMSG.data, // 将data赋值给
+  loading: loading
+}))
+
+class EditableTableExpenses extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data, editingKey: '' };
+    this.state = {
+      editingKey: '',
+      deleteKey:'',
+      data: data,
+      pagination: {},
+      loading: false,
+      visible: false,
+    };
     this.columns = [
       {
-        title: 'name',
-        dataIndex: 'name',
-        width: '25%',
+        title: '消费id',
+        dataIndex: 'expensesId',
+        align: 'center',
+        editable: false,
+      },
+      {
+        title: '消费时间',
+        dataIndex: 'expensesTime',
+        align: 'center',
         editable: true,
       },
       {
-        title: 'age',
-        dataIndex: 'age',
-        width: '15%',
+        title: '消费金额',
+        dataIndex: 'expensesNum',
+        align: 'center',
         editable: true,
       },
       {
-        title: 'address',
-        dataIndex: 'address',
-        width: '40%',
+        title: '消费类型',
+        dataIndex: 'expensesSort',
+        align: 'center',
         editable: true,
       },
       {
-        title: 'operation',
+        title: '备注',
+        dataIndex: 'expensesRemark',
+        align: 'center',
+        editable: true,
+      },
+      {
+        title: '消费人账号',
+        dataIndex: 'expensesUserId',
+        align: 'center',
+        editable: true,
+      },
+      {
+        title: '消费人姓名',
+        dataIndex: 'expensesUser',
+        editable: true,
+      },
+
+      {
+        title: '操作',
         dataIndex: 'operation',
+        align: 'center',
         render: (text, record) => {
           const { editingKey } = this.state;
           const editable = this.isEditing(record);
@@ -92,61 +166,144 @@ class EditableTable extends React.Component {
             <span>
               <EditableContext.Consumer>
                 {form => (
-                  <a
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
+                  <a onClick={() => this.save(form, record)} style={{ marginRight: 8 }}>
+                    保存
                   </a>
                 )}
               </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                <a>Cancel</a>
+              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.expensesId)}>
+                <a>取消</a>
               </Popconfirm>
             </span>
           ) : (
             <div>
-              <Button type="primary" shape="round" icon="download" size={'default'} onClick={() => this.edit(record.key)}>
+              <Button
+                type="primary"
+                shape="round"
+                icon="edit"
+                size={'default'}
+                style={{margin:'0 3px 0 3px'}}
+                onClick={() => this.edit(record.expensesId)}
+              >
                 编辑
               </Button>
-
-              <Button type="danger" shape="round" icon="download" size={'default'} onClick={() => this.delete(record.key)}>
-                删除
-              </Button>
-
+              <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.expensesId)}>
+                <Button
+                  type="danger"
+                  shape="round"
+                  icon="delete"
+                  size={'default'}
+                  style={{margin:'0 3px 0 3px'}}
+                >
+                  删除
+                </Button>
+              </Popconfirm>
             </div>
-
-
           );
         },
+        width: '20%',
       },
     ];
   }
+  // 初始化表格数据
+  componentDidMount() {
+    this.fetch();
 
-  isEditing = record => record.key === this.state.editingKey;
+    this.props.dispatch({
+      type: `${namespace}/findType`,
+      callback: (data)=>{
+        console.log(data);
+        groupSelect = [];
+        groupName = data;
+        for (let i = 0; i < groupName.length; i++) {
+          groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
+        }
+      }
+    })
+  }
+
+  // 变换条件发送请求
+  handleTableChange = (pagination, filters) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    this.fetch({
+      limit: pagination.pageSize,
+      offset: pagination.current,
+      ...filters,
+    });
+  };
+
+  // 发送请求
+  fetch = (params = {}) => {
+    // console.log('params:', params);
+    this.setState({ loading: true });
+    reqwest({
+      url: 'http://localhost:10010/friday/bills/userExpenses/selectAll',
+      method: 'get',
+      contentType: 'application/json',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        limit: 10,
+        ...params,
+      },
+      type: 'json',
+    }).then(data => {
+      const pagination = { ...this.state.pagination };
+      // Read total count from server
+      pagination.total = data.count;
+      this.setState({
+        loading: false,
+        data: data.data,
+        pagination,
+      });
+    });
+  };
+
+  // 搜索
+  searchFund(expensesSort, expensesTime) {
+    param.expensesSort = expensesSort;
+    param.expensesTime = expensesTime;
+    this.fetch(param);
+  }
+
+  isEditing = record => record.expensesId === this.state.editingKey;
 
   cancel = () => {
     this.setState({ editingKey: '' });
   };
 
-  save(form, key) {
+  save(form, record) {
+    // console.log(form);
+    // console.log(key);
     form.validateFields((error, row) => {
       if (error) {
         return;
       }
-      const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        this.setState({ data: newData, editingKey: '' });
-      } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: '' });
+      row["expensesId"] = record["expensesId"];
+      const { dispatch } = this.props;
+      dispatch({
+        type: `${namespace}/updateExpenses`,
+        payload: {
+          ...row
+        },
+      });
+      data = this.state.data;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].expensesId === row["expensesId"]) {
+          data[i] = row;
+          break;
+        }
       }
+      // console.log(data);
+      this.setState({
+        editingKey: '',
+        data:data,});
+      message.info('修改成功！');
     });
   }
 
@@ -155,10 +312,84 @@ class EditableTable extends React.Component {
   }
 
   delete(key) {
-    this.setState({deleteKey : key});
+    // console.log(key);
+    const { dispatch } = this.props;
+    dispatch({
+      type: `${namespace}/deleteExpenses`,
+      payload: {
+        id:key
+      },
+    });
+    data = this.state.data;
+    for (let i = 0; i <data.length; i++) {
+      if (data[i].expensesId === key) {
+        data.splice(i,1)
+      }
+    }
+    message.info('删除成功！');
   }
 
+
+  // 打开模态框
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+
+  };
+
+
+  sub = (param) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `${namespace}/insertExpenses`,
+      payload: {
+        ...param
+      },
+    });
+  };
+
+
+
+  //增加模态框提交
+  handleOk = e => {
+    let isEmpty = true;
+    // console.log(e);
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        // console.log('Received values of form: ', values);
+      }
+      if (values["expensesUser"]!=null && values["expensesUser"] !== ""&&values["expensesSort"]!=null && values["expensesSort"] !== "" && values["expensesUser"]!=null && values["expensesUser"] !== ""){
+        isEmpty = false;
+      }
+      if (!isEmpty){
+        if(values["expensesSort"] === 999){
+          values["expensesSort"] = values["expensesSort1"] == null || values["expensesSort1"] === "" ? "其他" : values["expensesSort1"]
+        }
+        this.sub(values);
+        this.setState({
+          visible: false,
+        });
+        this.fetch(param);
+        message.info('添加成功！');
+        this.props.form.resetFields();
+      }
+    });
+  };
+
+  // 关闭模态框
+  handleCancel = e => {
+    // console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+
   render() {
+    const { getFieldDecorator } = this.props.form;
+
     const components = {
       body: {
         cell: EditableCell,
@@ -181,64 +412,163 @@ class EditableTable extends React.Component {
       };
     });
 
+
     return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
-        />
-      </EditableContext.Provider>
+      <div>
+        <Row style={{ fontSize: '14px' }}>
+          <Col span={20}>
+            <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
+              <label>支出类型:</label>
+              <Select
+                // mode="multiple"
+                placeholder={'可选类型，默认全选'}
+                labelInValue
+                style={{
+                  width: 180,
+                  marginRight: '2.5rem',
+                  marginBottom: '1rem',
+                  whiteSpace: 'nowrap',
+                }}
+                onChange={changeType}
+              >
+                <Option value="">全部</Option>
+                {groupSelect}
+              </Select>
+            </div>
+
+            <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
+              <label>查找时间：</label>
+              <RangePicker
+                onChange={onChangeTime}
+                style={{
+                  width: 180,
+                  marginRight: '2.5rem',
+                  marginBottom: '1rem',
+                  whiteSpace: 'nowrap',
+                }}
+              />
+            </div>
+            <Button
+              icon="search"
+              type="primary"
+              onClick={() => this.searchFund(param.expensesSort, param.expensesTime)}
+            >
+              Search
+            </Button>
+          </Col>
+
+          <Col span={4}></Col>
+        </Row>
+        <Row style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+          <Col span={24}>
+            <Button type="primary" icon="add" style={{ marginLeft: '0.3rem', float: 'right' }} onClick={this.showModal}>
+              添加
+            </Button>
+            <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}
+                    onClick={()=>{location.href = 'http://localhost:10010/friday/bills/userExpenses/downloadExpenses?expensesTime='+param.expensesTime}}>
+              下载
+            </Button>
+          </Col>
+        </Row>
+        <EditableContext.Provider value={this.props.form}>
+          <Table
+            components={components}
+            bordered
+            dataSource={this.state.data}
+            columns={columns}
+            rowKey="expensesId"
+            rowClassName="editable-row"
+            onChange={this.handleTableChange}
+            pagination={this.state.pagination}
+            loading={this.state.loading}
+          />
+        </EditableContext.Provider>
+
+        <Modal
+          title="添加支出"
+          visible={this.state.visible}
+          bodyStyle={{width:'auto',height:'300px'}}
+          onOk={this.handleOk}
+          afterClose={this.fetch}
+          htmlType="submit"
+          onCancel={this.handleCancel}
+        >
+          <Form onSubmit={this.handleOk} className="login-form">
+            <Form.Item>
+              {getFieldDecorator('expensesUser', {
+                rules: [{ required: true, message: '消费人，默认为账号登录人' }],
+              })(
+                <Input
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="消费人"
+                />,
+              )}
+            </Form.Item>
+
+            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('expensesSort', {
+                rules: [{ required: true, message: '请选择消费类型' }],
+              })(
+                <Select
+                  placeholder="选择{其它}后可以自行填写"
+                >
+                  {groupSelect}
+                  <Select.Option value={999} key={999}>其他</Select.Option>
+                </Select>
+              )}
+            </Form.Item>
+
+            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('expensesSort1', {
+                rules: [{message: '请选择消费类型' }],
+              })(
+                <Input
+                  placeholder="填写其他分类"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('expensesNum', {
+                rules: [{ required: true, message: '请输入消费金额，单位：元' }],
+              })(
+                <Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="消费金额"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('expensesRemark', {
+                rules: [{  message: '备注' }],
+              })(
+                <Input
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="备注（非必填）"
+                />,
+              )}
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
     );
   }
 }
 
 
-const EditableFormTable = Form.create()(EditableTable);
-const InputGroup = Input.Group;
-const {  RangePicker } = DatePicker;
-function onChange(date, dateString) {
-  console.log(date, dateString);
-}
-export default class ClaimsAndDebtsTable extends React.Component{
+
+
+const EditableCellForm = Form.create()(EditableTableExpenses);
+
+export default class ClaimsAndDebtsTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-    return(
+    return (
       <div>
-        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
-          <Col span={5}>
-          </Col>
-
-          <Col span={12}>
-            <InputGroup compact>
-              <Input style={{ width: '50%' }}  />
-              <RangePicker onChange={onChange} style={{ width: '50%' }} />
-            </InputGroup>
-          </Col>
-          <Col span={7}>
-            <Button type="primary" shape="circle" icon="search" />
-          </Col>
-        </Row>
-
-
-        <Row style={{marginTop : '1rem',marginBottom:'1rem'}}>
-          <Col span={24}>
-            <Button type="primary" icon="add" style={{marginLeft :'0.3rem',float:'right'}}>
-              添加
-            </Button>
-            <Button type="primary" icon="download" style={{marginLeft :'0.3rem',float:'right'}}>
-              下载
-            </Button>
-          </Col>
-
-        </Row>
-        <EditableFormTable />
+        <EditableCellForm />
       </div>
-    )
+    );
   }
 }

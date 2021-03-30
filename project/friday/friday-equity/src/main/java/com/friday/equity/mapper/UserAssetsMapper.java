@@ -8,7 +8,7 @@ import java.util.List;
  * (UserAssets)表数据库访问层
  *
  * @author makejava
- * @since 2021-02-25 16:31:20
+ * @since 2021-03-30 14:33:51
  */
 public interface UserAssetsMapper {
 

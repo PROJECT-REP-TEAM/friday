@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (ClaimsAndDebt)实体类
  *
  * @author makejava
- * @since 2021-02-25 16:29:59
+ * @since 2021-03-30 14:35:58
  */
 public class ClaimsAndDebt implements Serializable {
-    private static final long serialVersionUID = 623626798802566986L;
+    private static final long serialVersionUID = -40307543628410604L;
     /**
     * 资产负债ID
     */

@@ -87,15 +87,6 @@ function changeType(value) {
   param.fundSort = value.key;
 }
 
-// 选择时间段
-function onChangeTime(date, dateString) {
-  console.log(dateString.toString());
-  param.fundTime = dateString.toString();
-}
-
-
-
-
 
 @connect(({ fundMSG: fundMSG, loading }) => ({
   data: fundMSG.data, // 将data赋值给
@@ -259,9 +250,6 @@ class EditableTableFund extends React.Component {
   click(record,rowkey){
 
     console.log(record.fundCode);
-    // this.props.history.push({ pathname : '/fund/FundDetail' , query : { code : record.code }});
-    // history.push({ pathname : '/fund/FundDetail' , query : { code : record.fundCode }})
-    // location.href = '/fund/FundDetail?code=' + record.fundCode
     const {dispatch} = this.props;
     dispatch(routerRedux.push({
       pathname : '/fund/FundDetail' , query : { code : record.fundCode}
@@ -275,10 +263,6 @@ class EditableTableFund extends React.Component {
     param.fundSort = fundSort;
     param.fundTime = fundTime;
     this.fetch(param);
-  }
-
-  edit(key) {
-    this.setState({ editingKey: key });
   }
 
   delete(key) {

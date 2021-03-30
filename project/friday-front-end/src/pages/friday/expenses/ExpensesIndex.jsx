@@ -39,7 +39,7 @@ export default class ExpensesIndex extends React.Component{
       top2: "本月支出",
       top3: "较大支出分类",
       top4:"查看本年",
-      top3Data:"",
+      top3Data:"学习",
       percent:0,
     };
   }
@@ -165,8 +165,10 @@ export default class ExpensesIndex extends React.Component{
         } else {
           percent = (parseFloat(data.todayExpenses) - avg) / avg;
         }
-        for (let i = 0; i < 3; i++) {
-          top3Data += data.expensesGroup[i].name + "、"
+        if(data.expensesGroup != null && data.expensesGroup.length > 0){
+          for (let i = 0; i < 3; i++) {
+            top3Data += data.expensesGroup[i].name + "、"
+          }
         }
         this.setState({
           timeList:timeList,

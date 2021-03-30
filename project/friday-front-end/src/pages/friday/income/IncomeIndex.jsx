@@ -39,7 +39,7 @@ export default class IncomeIndex extends React.Component{
       top2: "本月收入",
       top3: "较大收入分类",
       top4:"查看本年",
-      top3Data:"",
+      top3Data:"分红",
       percent:0,
     };
   }
@@ -163,8 +163,10 @@ export default class IncomeIndex extends React.Component{
         console.log("今日" + data.todayIncome);
         percent = (parseFloat(data.todayIncome) - avg) / avg;
         console.log(percent)
-        for (let i = 0; i < 3; i++) {
-          top3Data += data.incomeGroup[i].name + "、"
+        if (data.incomeGroup != null && data.incomeGroup.length > 0){
+          for (let i = 0; i < 3; i++) {
+            top3Data += data.incomeGroup[i].name + "、"
+          }
         }
         this.setState({
           timeList:timeList,

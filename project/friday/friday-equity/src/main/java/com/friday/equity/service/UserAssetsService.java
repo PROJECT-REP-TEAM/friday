@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
  * (UserAssets)表服务接口
  *
  * @author makejava
- * @since 2021-02-25 16:31:20
+ * @since 2021-03-30 14:33:52
  */
 public interface UserAssetsService {
 

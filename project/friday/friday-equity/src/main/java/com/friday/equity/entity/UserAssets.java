@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (UserAssets)实体类
  *
  * @author makejava
- * @since 2021-02-25 16:31:20
+ * @since 2021-03-30 14:33:48
  */
 public class UserAssets implements Serializable {
-    private static final long serialVersionUID = 279634980415656606L;
+    private static final long serialVersionUID = -61769372495321621L;
     /**
     * 资产id主键
     */
@@ -27,6 +27,14 @@ public class UserAssets implements Serializable {
     */
     private String assetsCreateTime;
     /**
+    * 全款或首付花费
+    */
+    private String totalPrice;
+    /**
+    * 历史价值
+    */
+    private String historicalValue;
+    /**
     * 资产所有者
     */
     private String assetsOwner;
@@ -43,9 +51,15 @@ public class UserAssets implements Serializable {
     */
     private String instalmentSurplus;
     /**
+    * 变现价值
+    */
+    private String realizationValue;
+    /**
     * 备注
     */
     private String assetsRemark;
+
+
 
 
     public Integer getAssetsId() {
@@ -80,6 +94,22 @@ public class UserAssets implements Serializable {
         this.assetsCreateTime = assetsCreateTime;
     }
 
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getHistoricalValue() {
+        return historicalValue;
+    }
+
+    public void setHistoricalValue(String historicalValue) {
+        this.historicalValue = historicalValue;
+    }
+
     public String getAssetsOwner() {
         return assetsOwner;
     }
@@ -110,6 +140,14 @@ public class UserAssets implements Serializable {
 
     public void setInstalmentSurplus(String instalmentSurplus) {
         this.instalmentSurplus = instalmentSurplus;
+    }
+
+    public String getRealizationValue() {
+        return realizationValue;
+    }
+
+    public void setRealizationValue(String realizationValue) {
+        this.realizationValue = realizationValue;
     }
 
     public String getAssetsRemark() {
