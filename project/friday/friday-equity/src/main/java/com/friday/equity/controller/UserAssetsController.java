@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 
@@ -45,9 +46,15 @@ public class UserAssetsController {
      * @return 对象列表
      */
     @GetMapping("selectAll")
-    public ResponseEntity<Map<String,Object>> selectAll(Integer offset ,Integer limit , UserAssets userAssets){
+    public ResponseEntity<Map<String,Object>> selectAll(
+            @RequestParam(value = "offset" ,required = false)
+                    Integer offset,Integer limit , UserAssets userAssets){
         Map<String,Object> map = new HashMap<>();
-        userAssets.setOffset(offset);
+        if (offset == null || offset == 0){
+            userAssets.setOffset(1);
+        }else{
+            userAssets.setOffset(offset);
+        }
         userAssets.setLimit(limit);
         PageInfo<UserAssets> allData = userAssetsService.queryAllByEntity(userAssets);
         map.put("count",allData.getTotal());
@@ -95,4 +102,6 @@ public class UserAssetsController {
         userAssetsService.update(userAssets);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+
 }

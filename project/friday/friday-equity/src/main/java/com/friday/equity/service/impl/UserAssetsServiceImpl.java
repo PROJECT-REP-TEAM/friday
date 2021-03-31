@@ -81,4 +81,6 @@ public class UserAssetsServiceImpl implements UserAssetsService {
     public boolean deleteById(Integer assetsId) {
         return this.userAssetsMapper.deleteById(assetsId) > 0;
     }
+
+
 }
