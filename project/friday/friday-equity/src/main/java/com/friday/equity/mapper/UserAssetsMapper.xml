@@ -69,7 +69,30 @@
                 and assets_remark = #{assetsRemark}
             </if>
         </where>
+        order by assets_id desc
     </select>
+
+
+    <select id="assetRatio" resultType="java.util.Map">
+        select assets_name as name, historical_value as value from user_assets
+    </select>
+    <select id="loanSituation" resultType="java.util.Map">
+        select assets_name as name, (instalment_surplus*instalment_price) as value from user_assets
+    </select>
+    <select id="totalCost" resultType="java.lang.Object">
+        select SUM(total_price)+SUM(assets_instalment)*SUM(instalment_price) as totalCost from user_assets
+    </select>
+    <select id="totalRealizableValue" resultType="java.lang.Object">
+        select SUM(realization_value) as totalRealizableValue from user_assets
+    </select>
+    <select id="totalMortgage" resultType="java.lang.Object">
+        select SUM(instalment_price)*SUM(instalment_surplus) as totalMortgage from user_assets
+    </select>
+    <select id="monthCost" resultType="java.lang.Object">
+        select SUM(instalment_price) as monthCost from user_assets
+    </select>
+
+
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="assetsId" useGeneratedKeys="true">

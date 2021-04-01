@@ -3,6 +3,7 @@ package com.friday.equity.mapper;
 import com.friday.equity.entity.UserAssets;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (UserAssets)表数据库访问层
@@ -54,4 +55,15 @@ public interface UserAssetsMapper {
      */
     int deleteById(Integer assetsId);
 
+    List<Map> assetRatio();
+
+    List<Map> loanSituation();
+
+    Object totalCost();
+
+    Object totalRealizableValue();
+
+    Object totalMortgage();
+
+    Object monthCost();
 }

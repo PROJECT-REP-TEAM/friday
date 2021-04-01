@@ -62,22 +62,12 @@ class AssetsIndexHead extends React.Component{
       loading: false,
       visible: false,
       assetsId:'',
-      assetsName:'',
-      assetsLocation:'',
-      assetsCreateTime:'',
-      totalPrice:'',
-      historicalValue:'',
-      assetsOwner:'',
-      assetsInstalment:'',
-      instalmentPrice:'',
-      instalmentSurplus:'',
-      realizationValue:'',
-      assetsRemark:'',
-      allPrices:'',
-      lastMonth:'',
-      profitAndLoss:'',
-      profitAndLossPer:'',
-      incomePer:''
+      assetRatio:[],
+      loanSituation:[],
+      totalCost:'',
+      totalRealizableValue:'',
+      totalMortgage:'',
+      monthCost:''
     }
 
     this.columns = [
@@ -261,21 +251,25 @@ class AssetsIndexHead extends React.Component{
   }
 
   componentDidMount = ()=>{
-    this.showGraph();
     this.fetch();
 
-    //分类
-    // this.props.dispatch({
-    //   type: `${namespace}/findAssetsTypeName`,
-    //   callback: (data)=>{
-    //     console.log(data);
-    //     groupSelectList = [];
-    //     groupNameList = data;
-    //     for (let i = 0; i < groupNameList.length; i++) {
-    //       groupSelectList.push(<Select.Option value={groupNameList[i]} key={i}>{groupNameList[i]}</Select.Option>)
-    //     }
-    //   }
-    // })
+    // 分类
+    this.props.dispatch({
+      type: `${namespace}/findAssetsTypeName`,
+      callback: (data)=>{
+        if (data){
+          this.setState({
+            assetRatio:data.assetRatio,
+            loanSituation: data.loanSituation,
+            totalCost:data.totalCost,
+            totalRealizableValue:data.totalRealizableValue,
+            totalMortgage:data.totalMortgage,
+            monthCost:data.monthCost
+          });
+          this.showGraph();
+        }
+      }
+    })
 
   }
   showGraph = () =>{
@@ -284,7 +278,7 @@ class AssetsIndexHead extends React.Component{
     chartC = echarts.init(document.getElementById("intangible"));
     chartA.setOption({
       title: {
-        text: '固定资产占比情况',
+        text: '资产占比情况',
         left: 'center'
       },
       tooltip: {
@@ -292,7 +286,7 @@ class AssetsIndexHead extends React.Component{
       },
       series: [
         {
-          name: '访问来源',
+          name: '当前金额',
           type: 'pie',
           radius: ['40%', '70%'],
           avoidLabelOverlap: false,
@@ -315,19 +309,13 @@ class AssetsIndexHead extends React.Component{
           labelLine: {
             show: false
           },
-          data: [
-            {value: 1048, name: '搜索引擎'},
-            {value: 735, name: '直接访问'},
-            {value: 580, name: '邮件营销'},
-            {value: 484, name: '联盟广告'},
-            {value: 300, name: '视频广告'}
-          ]
+          data: this.state.assetRatio
         }
       ]
     });
     chartB.setOption({
       title: {
-        text: '资产负债率',
+        text: '资产贷款率',
         left: 'center'
       },
       series: [{
@@ -341,14 +329,14 @@ class AssetsIndexHead extends React.Component{
           formatter: '{value}'
         },
         data: [{
-          value: 50,
+          value: (parseInt((this.state.totalMortgage/this.state.totalCost)*100)),
           name: '比值%'
         }]
       }]
     });
     chartC.setOption({
       title: {
-        text: '流动资产占比情况',
+        text: '资产按揭情况',
         left: 'center'
       },
       tooltip: {
@@ -358,13 +346,7 @@ class AssetsIndexHead extends React.Component{
         {
           type: 'pie',
           radius: '50%',
-          data: [
-            {value: 1048, name: '搜索引擎'},
-            {value: 735, name: '直接访问'},
-            {value: 580, name: '邮件营销'},
-            {value: 484, name: '联盟广告'},
-            {value: 300, name: '视频广告'}
-          ]
+          data: this.state.loanSituation
         }
       ]
     });
@@ -402,8 +384,8 @@ class AssetsIndexHead extends React.Component{
       this.setState({
         visible: false,
       });
-      this.fetch(param);
       message.info('添加成功！');
+      setTimeout(() => this.fetch(param), 1000);
       this.props.form.resetFields();
     });
   };
@@ -435,14 +417,12 @@ class AssetsIndexHead extends React.Component{
           <div id="balance" style={{width:'34%',height : '18rem',marginTop : '1rem', float : 'left',minWidth:'300px'}}></div>
           <div id="intangible" style={{width:'33%',height : '18rem',marginTop : '1rem', float : 'right',minWidth:'300px'}}></div>
         </div>
-        <Descriptions title="User Info" style={{background:'#ffffff',padding:'5%'}}>
-          <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
-          <Descriptions.Item label="Telephone">1810000000</Descriptions.Item>
-          <Descriptions.Item label="Live">Hangzhou, Zhejiang</Descriptions.Item>
-          <Descriptions.Item label="Remark">empty</Descriptions.Item>
-          <Descriptions.Item label="Address">
-            No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
-          </Descriptions.Item>
+        <Descriptions title="资产情况" style={{background:'#ffffff',padding:'5%'}}>
+          <Descriptions.Item label="资产总成本">{this.state.totalCost}</Descriptions.Item>
+          <Descriptions.Item label="资产变现总值">{this.state.totalRealizableValue}</Descriptions.Item>
+          <Descriptions.Item label="当前变现盈亏情况">{this.state.totalRealizableValue - this.state.totalCost}</Descriptions.Item>
+          <Descriptions.Item label="按揭剩余总额">{this.state.totalMortgage}</Descriptions.Item>
+          <Descriptions.Item label="每月应付按揭费用">{this.state.monthCost}</Descriptions.Item>
         </Descriptions>
 
         <div style={{background:'#ffffff',padding:'5%'}}>

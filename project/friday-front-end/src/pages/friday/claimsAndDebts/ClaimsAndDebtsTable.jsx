@@ -19,7 +19,7 @@ import reqwest from 'reqwest';
 
 import { connect } from 'dva';
 
-const namespace = 'expensesMSG';
+const namespace = 'claimsAndDebtsMSG';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -73,35 +73,33 @@ class EditableCell extends React.Component {
 
 // 初始化值
 let param = {
-  expensesTime: '',
-  expensesSort: '',
+  cadTime: '',
+  cadType: '',
 };
 
-let groupSelect = [];
-let groupName = [];
 let data = [];
 // 选择分类
 function changeType(value) {
   // console.log(value.key); // { key: "lucy", label: "Lucy (101)" }
-  param.expensesSort = value.key;
+  param.cadType = value.key;
 }
 
 // 选择时间段
 function onChangeTime(date, dateString) {
   // console.log(dateString.toString());
-  param.expensesTime = dateString.toString();
+  param.cadTime = dateString.toString();
 }
 
 
 
 
 
-@connect(({ expensesMSG, loading }) => ({
-  data: expensesMSG.data, // 将data赋值给
+@connect(({ claimsAndDebtsMSG, loading }) => ({
+  data: claimsAndDebtsMSG.data, // 将data赋值给
   loading: loading
 }))
 
-class EditableTableExpenses extends React.Component {
+class EditableTableClaimsAndDebts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -114,47 +112,60 @@ class EditableTableExpenses extends React.Component {
     };
     this.columns = [
       {
-        title: '消费id',
-        dataIndex: 'expensesId',
+        title: '资产负债ID',
+        dataIndex: 'cadId',
         align: 'center',
         editable: false,
       },
       {
-        title: '消费时间',
-        dataIndex: 'expensesTime',
+        title: '借入|借出',
+        dataIndex: 'cadType',
         align: 'center',
         editable: true,
       },
       {
-        title: '消费金额',
-        dataIndex: 'expensesNum',
+        title: '债权人',
+        dataIndex: 'creditor',
         align: 'center',
         editable: true,
       },
       {
-        title: '消费类型',
-        dataIndex: 'expensesSort',
+        title: '债务人',
+        dataIndex: 'obligor',
         align: 'center',
         editable: true,
       },
       {
-        title: '备注',
-        dataIndex: 'expensesRemark',
+        title: '交易数量',
+        dataIndex: 'cadNum',
         align: 'center',
         editable: true,
       },
       {
-        title: '消费人账号',
-        dataIndex: 'expensesUserId',
+        title: '交易时间',
+        dataIndex: 'cadTime',
         align: 'center',
         editable: true,
       },
       {
-        title: '消费人姓名',
-        dataIndex: 'expensesUser',
+        title: '已偿还金额',
+        dataIndex: 'cadRepay',
         editable: true,
       },
 
+      {
+        title: '预计偿还时间',
+        dataIndex: 'cadPlan',
+        editable: true,
+      },
+
+      {
+        title: '备注',
+        dataIndex: 'cadRemark',
+        editable: true,
+      },
+      
+      
       {
         title: '操作',
         dataIndex: 'operation',
@@ -171,7 +182,7 @@ class EditableTableExpenses extends React.Component {
                   </a>
                 )}
               </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.expensesId)}>
+              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.cadId)}>
                 <a>取消</a>
               </Popconfirm>
             </span>
@@ -183,11 +194,11 @@ class EditableTableExpenses extends React.Component {
                 icon="edit"
                 size={'default'}
                 style={{margin:'0 3px 0 3px'}}
-                onClick={() => this.edit(record.expensesId)}
+                onClick={() => this.edit(record.cadId)}
               >
                 编辑
               </Button>
-              <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.expensesId)}>
+              <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.cadId)}>
                 <Button
                   type="danger"
                   shape="round"
@@ -209,17 +220,17 @@ class EditableTableExpenses extends React.Component {
   componentDidMount() {
     this.fetch();
 
-    this.props.dispatch({
-      type: `${namespace}/findType`,
-      callback: (data)=>{
-        console.log(data);
-        groupSelect = [];
-        groupName = data;
-        for (let i = 0; i < groupName.length; i++) {
-          groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
-        }
-      }
-    })
+    // this.props.dispatch({
+    //   type: `${namespace}/findType`,
+    //   callback: (data)=>{
+    //     console.log(data);
+    //     groupSelect = [];
+    //     groupName = data;
+    //     for (let i = 0; i < groupName.length; i++) {
+    //       groupSelect.push(<Select.Option value={groupName[i]} key={i}>{groupName[i]}</Select.Option>)
+    //     }
+    //   }
+    // })
   }
 
   // 变换条件发送请求
@@ -232,6 +243,8 @@ class EditableTableExpenses extends React.Component {
     this.fetch({
       limit: pagination.pageSize,
       offset: pagination.current,
+      cadType: param.cadType,
+      cadTime: param.cadTime,
       ...filters,
     });
   };
@@ -241,7 +254,7 @@ class EditableTableExpenses extends React.Component {
     // console.log('params:', params);
     this.setState({ loading: true });
     reqwest({
-      url: 'http://localhost:10010/friday/bills/userExpenses/selectAll',
+      url: 'http://localhost:10010/friday/equity/claimsAndDebt/selectAll',
       method: 'get',
       contentType: 'application/json',
       headers: {
@@ -265,13 +278,13 @@ class EditableTableExpenses extends React.Component {
   };
 
   // 搜索
-  searchFund(expensesSort, expensesTime) {
-    param.expensesSort = expensesSort;
-    param.expensesTime = expensesTime;
+  searchFund(cadType, cadTime) {
+    param.cadType = cadType;
+    param.cadTime = cadTime;
     this.fetch(param);
   }
 
-  isEditing = record => record.expensesId === this.state.editingKey;
+  isEditing = record => record.cadId === this.state.editingKey;
 
   cancel = () => {
     this.setState({ editingKey: '' });
@@ -284,17 +297,17 @@ class EditableTableExpenses extends React.Component {
       if (error) {
         return;
       }
-      row["expensesId"] = record["expensesId"];
+      row["cadId"] = record["cadId"];
       const { dispatch } = this.props;
       dispatch({
-        type: `${namespace}/updateExpenses`,
+        type: `${namespace}/updateClaimsAndDebts`,
         payload: {
           ...row
         },
       });
       data = this.state.data;
       for (let i = 0; i < data.length; i++) {
-        if (data[i].expensesId === row["expensesId"]) {
+        if (data[i].cadId === row["cadId"]) {
           data[i] = row;
           break;
         }
@@ -315,14 +328,14 @@ class EditableTableExpenses extends React.Component {
     // console.log(key);
     const { dispatch } = this.props;
     dispatch({
-      type: `${namespace}/deleteExpenses`,
+      type: `${namespace}/deleteClaimsAndDebts`,
       payload: {
         id:key
       },
     });
     data = this.state.data;
     for (let i = 0; i <data.length; i++) {
-      if (data[i].expensesId === key) {
+      if (data[i].cadId === key) {
         data.splice(i,1)
       }
     }
@@ -342,7 +355,7 @@ class EditableTableExpenses extends React.Component {
   sub = (param) => {
     const { dispatch } = this.props;
     dispatch({
-      type: `${namespace}/insertExpenses`,
+      type: `${namespace}/insertClaimsAndDebts`,
       payload: {
         ...param
       },
@@ -353,28 +366,19 @@ class EditableTableExpenses extends React.Component {
 
   //增加模态框提交
   handleOk = e => {
-    let isEmpty = true;
     // console.log(e);
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // console.log('Received values of form: ', values);
       }
-      if (values["expensesUser"]!=null && values["expensesUser"] !== ""&&values["expensesSort"]!=null && values["expensesSort"] !== "" && values["expensesUser"]!=null && values["expensesUser"] !== ""){
-        isEmpty = false;
-      }
-      if (!isEmpty){
-        if(values["expensesSort"] === 999){
-          values["expensesSort"] = values["expensesSort1"] == null || values["expensesSort1"] === "" ? "其他" : values["expensesSort1"]
-        }
-        this.sub(values);
-        this.setState({
-          visible: false,
-        });
-        this.fetch(param);
-        message.info('添加成功！');
-        this.props.form.resetFields();
-      }
+      this.sub(values);
+      this.setState({
+        visible: false,
+      });
+      message.info('添加成功！');
+      setTimeout(() => this.searchFund(), 1000);
+      this.props.form.resetFields();
     });
   };
 
@@ -432,7 +436,8 @@ class EditableTableExpenses extends React.Component {
                 onChange={changeType}
               >
                 <Option value="">全部</Option>
-                {groupSelect}
+                <Option value="借出">债权</Option>
+                <Option value="借入">债务</Option>
               </Select>
             </div>
 
@@ -451,7 +456,7 @@ class EditableTableExpenses extends React.Component {
             <Button
               icon="search"
               type="primary"
-              onClick={() => this.searchFund(param.expensesSort, param.expensesTime)}
+              onClick={() => this.searchFund(param.cadType, param.cadTime)}
             >
               Search
             </Button>
@@ -465,7 +470,7 @@ class EditableTableExpenses extends React.Component {
               添加
             </Button>
             <Button type="primary" icon="download" style={{ marginLeft: '0.3rem', float: 'right' }}
-                    onClick={()=>{location.href = 'http://localhost:10010/friday/bills/userExpenses/downloadExpenses?expensesTime='+param.expensesTime}}>
+                    onClick={()=>{location.href = 'http://localhost:10010/friday/bills/userClaimsAndDebts/downloadClaimsAndDebts?cadTime='+param.cadTime}}>
               下载
             </Button>
           </Col>
@@ -476,7 +481,7 @@ class EditableTableExpenses extends React.Component {
             bordered
             dataSource={this.state.data}
             columns={columns}
-            rowKey="expensesId"
+            rowKey="cadId"
             rowClassName="editable-row"
             onChange={this.handleTableChange}
             pagination={this.state.pagination}
@@ -485,7 +490,7 @@ class EditableTableExpenses extends React.Component {
         </EditableContext.Provider>
 
         <Modal
-          title="添加支出"
+          title="添加债权或债务"
           visible={this.state.visible}
           bodyStyle={{width:'auto',height:'300px'}}
           onOk={this.handleOk}
@@ -494,51 +499,78 @@ class EditableTableExpenses extends React.Component {
           onCancel={this.handleCancel}
         >
           <Form onSubmit={this.handleOk} className="login-form">
-            <Form.Item>
-              {getFieldDecorator('expensesUser', {
-                rules: [{ required: true, message: '消费人，默认为账号登录人' }],
-              })(
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="消费人"
-                />,
-              )}
-            </Form.Item>
 
             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
-              {getFieldDecorator('expensesSort', {
-                rules: [{ required: true, message: '请选择消费类型' }],
+              {getFieldDecorator('cadType', {
+                rules: [{ required: true, message: '请选择类型' }],
               })(
                 <Select
-                  placeholder="选择{其它}后可以自行填写"
+                  placeholder="选择债权或债务"
                 >
-                  {groupSelect}
-                  <Select.Option value={999} key={999}>其他</Select.Option>
+                  <Select.Option value={'借出'} key={0}>债权</Select.Option>
+
+                  <Select.Option value={'借入'} key={1}>债务</Select.Option>
                 </Select>
               )}
             </Form.Item>
 
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('cadNum', {
+                rules: [{ required: true, message: '请填写涉及金额' }],
+              })(
+                <Input placeholder="涉及金额"
+                />,
+              )}
+            </Form.Item>
+
             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
-              {getFieldDecorator('expensesSort1', {
-                rules: [{message: '请选择消费类型' }],
+              {getFieldDecorator('creditor', {
+                rules: [{required: true, message: '请填写债权人' }],
               })(
-                <Input
-                  placeholder="填写其他分类"
+                <Input placeholder="债权人"
                 />,
               )}
             </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('expensesNum', {
-                rules: [{ required: true, message: '请输入消费金额，单位：元' }],
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('obligor', {
+                rules: [{ required: true, message: '请填写债务人' }],
               })(
-                <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="消费金额"
+                <Input placeholder="债务人"
                 />,
               )}
             </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('expensesRemark', {
+
+
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('cadTime', {
+                rules: [{ required: true, message: '请填交易时间' }],
+              })(
+                <Input placeholder="交易时间"
+                />,
+              )}
+            </Form.Item>
+
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('cadRepay', {
+                rules: [{ message: '请填写已偿还金额' }],
+              })(
+                <Input placeholder="已偿还金额"
+                />,
+              )}
+            </Form.Item>
+
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('cadPlan', {
+                rules: [{ message: '请填写预计偿还时间' }],
+              })(
+                <Input placeholder="预计偿还时间"
+                />,
+              )}
+            </Form.Item>
+
+
+             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)'}}>
+              {getFieldDecorator('cadRemark', {
                 rules: [{  message: '备注' }],
               })(
                 <Input
@@ -557,7 +589,7 @@ class EditableTableExpenses extends React.Component {
 
 
 
-const EditableCellForm = Form.create()(EditableTableExpenses);
+const EditableCellForm = Form.create()(EditableTableClaimsAndDebts);
 
 export default class ClaimsAndDebtsTable extends React.Component {
   constructor(props) {

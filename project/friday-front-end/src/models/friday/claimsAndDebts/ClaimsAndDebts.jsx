@@ -23,32 +23,29 @@ export default {
      */
 
 
-    *selectClaimsAndDebts({ payload,callback }, { call, put }) {
+    *selectClaimsAndDebts({ payload }, { call, put }) {
       const response = yield call(selectClaimsAndDebts, payload);
       yield put({
         // 这行对应下面的reducers处理函数名字
         type: "queryClaimsAndDebts",
         payload: response
       });
-      callback(response)
     },
 
-    *updateClaimsAndDebts({ payload,callback }, { call, put }) {
+    *updateClaimsAndDebts({ payload }, { call, put }) {
       const response = yield call(updateClaimsAndDebts, payload);
       yield put({
         type: "editClaimsAndDebts",
         payload: response
       });
-      callback(response)
     },
 
-    *insertClaimsAndDebts({ payload,callback }, { call, put }) {
+    *insertClaimsAndDebts({ payload }, { call, put }) {
       const response = yield call(insertClaimsAndDebts, payload);
       yield put({
         type: "addClaimsAndDebts",
         payload: response
       });
-      callback(response)
     },
 
     *deleteClaimsAndDebts({ payload,callback }, { call, put }) {

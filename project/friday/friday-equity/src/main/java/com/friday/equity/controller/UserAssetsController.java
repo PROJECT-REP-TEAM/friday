@@ -103,5 +103,11 @@ public class UserAssetsController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("getAssetsCollection")
+    public ResponseEntity<Map<String,Object>> getAssetsCollection() {
+        UserAssets userAssets = new UserAssets();
+        Map<String, Object> assets = this.userAssetsService.getAssetsCollection(userAssets);
+        return ResponseEntity.ok(assets);
+    }
 
 }

@@ -2,6 +2,8 @@ package com.friday.equity.service;
 
 import com.friday.equity.entity.ClaimsAndDebt;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -53,4 +55,5 @@ public interface ClaimsAndDebtService {
      */
     boolean deleteById(Integer cadId);
 
+    Map<String, Object> getCADCollection(ClaimsAndDebt claimsAndDebt);
 }

@@ -6,7 +6,10 @@ import com.friday.equity.service.UserAssetsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -80,6 +83,31 @@ public class UserAssetsServiceImpl implements UserAssetsService {
     @Override
     public boolean deleteById(Integer assetsId) {
         return this.userAssetsMapper.deleteById(assetsId) > 0;
+    }
+
+    @Override
+    public Map<String, Object> getAssetsCollection(UserAssets userAssets) {
+        Map<String,Object> map = new HashMap<>();
+//        资产占比情况
+        List<Map> group = userAssetsMapper.assetRatio();
+        map.put("assetRatio",group);
+
+//        资产贷款情况
+        List<Map> loanSituation = userAssetsMapper.loanSituation();
+        map.put("loanSituation",loanSituation);
+
+//        资产总成本
+        map.put("totalCost",userAssetsMapper.totalCost());
+
+//        资产变现总值
+        map.put("totalRealizableValue",userAssetsMapper.totalRealizableValue());
+
+//        剩余按揭总额
+        map.put("totalMortgage",userAssetsMapper.totalMortgage());
+
+//        每月应付按揭费用
+        map.put("monthCost",userAssetsMapper.monthCost());
+        return map;
     }
 
 

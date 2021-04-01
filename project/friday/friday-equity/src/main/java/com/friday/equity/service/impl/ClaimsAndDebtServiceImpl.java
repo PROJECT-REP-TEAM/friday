@@ -6,7 +6,10 @@ import com.friday.equity.service.ClaimsAndDebtService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -81,4 +84,31 @@ public class ClaimsAndDebtServiceImpl implements ClaimsAndDebtService {
     public boolean deleteById(Integer cadId) {
         return this.claimsAndDebtMapper.deleteById(cadId) > 0;
     }
+
+    @Override
+    public Map<String, Object> getCADCollection(ClaimsAndDebt claimsAndDebt) {
+        Map<String,Object> map = new HashMap<>();
+//        债务占比图
+        List<Map> claimsGroup = claimsAndDebtMapper.claimsGroup();
+        map.put("claimsGroup",claimsGroup);
+
+//        债权占比图
+        List<Map> debtGroup = claimsAndDebtMapper.debtGroup();
+        map.put("debtGroup",debtGroup);
+//        债务总额
+        map.put("sumClaim",claimsAndDebtMapper.sumClaim());
+
+//        债权总额
+        map.put("sumDebt",claimsAndDebtMapper.sumDebt());
+
+//        最高债务额
+        map.put("maxClaim",claimsAndDebtMapper.maxClaim());
+
+//        最高债权额
+        map.put("maxDebt",claimsAndDebtMapper.maxDebt());
+
+        return map;
+    }
+
+
 }

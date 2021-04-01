@@ -2,6 +2,7 @@ package com.friday.equity.controller;
 
 import com.friday.equity.entity.ClaimsAndDebt;
 import com.friday.equity.service.ClaimsAndDebtService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,19 @@ public class ClaimsAndDebtController {
     @GetMapping("selectAll")
     public ResponseEntity<Map<String,Object>> selectAll(Integer offset ,Integer limit , ClaimsAndDebt claimsAndDebt){
         Map<String,Object> map = new HashMap<>();
-        claimsAndDebt.setOffset(offset);
+        if (offset == null || offset == 0){
+            claimsAndDebt.setOffset(1);
+        }else{
+            claimsAndDebt.setOffset(offset);
+        }
+
+        if (StringUtils.isNotBlank(claimsAndDebt.getCadTime()) && !",".equals(claimsAndDebt.getCadTime())){
+            String[] split = StringUtils.split(claimsAndDebt.getCadTime(), ',');
+            claimsAndDebt.setDate1(split[0].replaceAll("-",""));
+            claimsAndDebt.setDate2(split[1].replaceAll("-",""));
+        }else {
+            claimsAndDebt.setCadTime(null);
+        }
         claimsAndDebt.setLimit(limit);
         PageInfo<ClaimsAndDebt> allData = claimsAndDebtService.queryAllByEntity(claimsAndDebt);
         map.put("count",allData.getTotal());
@@ -94,5 +107,13 @@ public class ClaimsAndDebtController {
     public ResponseEntity<Void> update(@RequestBody ClaimsAndDebt claimsAndDebt){
         claimsAndDebtService.update(claimsAndDebt);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    @GetMapping("getClaimsAndDebtsCollection")
+    public ResponseEntity<Map<String,Object>> getClaimsAndDebtsCollection() {
+        ClaimsAndDebt claimsAndDebt = new ClaimsAndDebt();
+        Map<String, Object> assets = this.claimsAndDebtService.getCADCollection(claimsAndDebt);
+        return ResponseEntity.ok(assets);
     }
 }

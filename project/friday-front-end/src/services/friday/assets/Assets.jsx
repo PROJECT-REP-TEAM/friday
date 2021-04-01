@@ -37,14 +37,14 @@ export async function deleteAssets(params) {
   });
 }
 
-export async function findAssetsTypeName() {
-  return request(`/api/friday/equity/userAssets/findType`, {
+export async function findAssetsTypeName(params) {
+  return request(`/api/friday/equity/userAssets/getAssetsCollection?${stringify(params)}`, {
     method: "GET"
   });
 }
 
 export async function getAssetsCollection(params) {
-  return request(`/api/friday/equity/userAssets/getAssetsCollection?${stringify(params)}`, {
+  return request(`/api/friday/equity/userAssets/selectOne?${stringify(params)}`, {
     method: "GET"
   });
 }

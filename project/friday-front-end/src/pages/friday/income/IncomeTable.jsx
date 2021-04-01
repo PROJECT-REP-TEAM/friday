@@ -233,6 +233,8 @@ class EditableTableIncome extends React.Component {
     this.fetch({
       limit: pagination.pageSize,
       offset: pagination.current,
+      incomeSort:param.incomeSort,
+      incomeTime:param.incomeTime,
       ...filters,
     });
   };
@@ -370,7 +372,7 @@ class EditableTableIncome extends React.Component {
         this.setState({
           visible: false,
         });
-        this.fetch(param);
+        setTimeout(() => this.fetch(param), 1000);
         message.info('添加成功！');
         this.props.form.resetFields();
       }

@@ -21,3 +21,6 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+logging:
+  level:
+    com.friday.equity.mapper : TRACE

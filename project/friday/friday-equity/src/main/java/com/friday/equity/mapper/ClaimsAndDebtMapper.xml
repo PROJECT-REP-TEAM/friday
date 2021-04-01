@@ -46,7 +46,7 @@
                 and CAD_num = #{cadNum}
             </if>
             <if test="cadTime != null and cadTime != ''">
-                and CAD_time = #{cadTime}
+                and CAD_time between #{date1} and #{date2}
             </if>
             <if test="cadRepay != null and cadRepay != ''">
                 and CAD_repay = #{cadRepay}
@@ -61,13 +61,33 @@
                 and CAD_status = #{cadStatus}
             </if>
         </where>
+        order by CAD_id desc ,CAD_num desc
+    </select>
+    <select id="claimsGroup" resultType="java.util.Map">
+        select SUM(CAD_num) as value,obligor as name
+        from claims_and_debt
+        where CAD_type = '借出'
+        group by obligor
+    </select>
+    <select id="debtGroup" resultType="java.util.Map">
+        select SUM(CAD_num) as value ,creditor as name
+        from claims_and_debt
+        where CAD_type = '借入'
+        group by creditor
+    </select>
+    <select id="sumClaim" resultType="java.lang.Object">
+        select SUM(CAD_num) as sumClaim from claims_and_debt where CAD_type='借出'
+    </select>
+    <select id="sumDebt" resultType="java.lang.Object">
+        select SUM(CAD_num) as sumDebt from claims_and_debt where CAD_type='借入'
+    </select>
+    <select id="maxClaim" resultType="java.lang.Object">
+        select MAX(CAD_num) as  maxClaim from claims_and_debt where CAD_type='借出'
+    </select>
+    <select id="maxDebt" resultType="java.lang.Object">
+        select MAX(CAD_num) as maxDebt from claims_and_debt where CAD_type='借入'
     </select>
 
-    <!--新增所有列-->
-    <insert id="insert" keyProperty="cadId" useGeneratedKeys="true">
-        insert into friday.claims_and_debt(CAD_type, creditor, obligor, CAD_num, CAD_time, CAD_repay, CAD_plan, CAD_remark, CAD_status)
-        values (#{cadType}, #{creditor}, #{obligor}, #{cadNum}, #{cadTime}, #{cadRepay}, #{cadPlan}, #{cadRemark}, #{cadStatus})
-    </insert>
 
     <!--通过主键修改数据-->
     <update id="update">

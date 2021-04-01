@@ -3,6 +3,7 @@ package com.friday.equity.mapper;
 import com.friday.equity.entity.ClaimsAndDebt;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (ClaimsAndDebt)表数据库访问层
@@ -54,4 +55,15 @@ public interface ClaimsAndDebtMapper {
      */
     int deleteById(Integer cadId);
 
+    List<Map> claimsGroup();
+
+    List<Map> debtGroup();
+
+    Object sumClaim();
+
+    Object sumDebt();
+
+    Object maxClaim();
+
+    Object maxDebt();
 }

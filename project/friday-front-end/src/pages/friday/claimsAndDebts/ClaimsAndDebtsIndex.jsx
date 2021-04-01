@@ -5,12 +5,18 @@ import 'echarts/lib/chart/bar';
 // 引入标题和提示框
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
+import { connect } from 'dva';
 
 let chartOne,chartTwo;
 
-export default class ExpensesIndex extends React.Component{
+const namespace = 'claimsAndDebtsMSG';
+@connect(({ incomeMSG: incomeMSG, loading }) => ({
+  data: incomeMSG.data, // 将data赋值给
+  loading: loading
+}))
+export default class ClaimsAndDebtsIndex extends React.Component{
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
       cadId:'',
       cadType:'',
@@ -21,12 +27,34 @@ export default class ExpensesIndex extends React.Component{
       cadRepay:'',
       cadPlan:'',
       cadRemark:'',
-      cadStatus:''
+      cadStatus:'',
+      claimsGroup:[],
+      debtGroup:[],
+      sumClaim:'',
+      sumDebt:'',
+      maxClaim:'',
+      maxDebt:''
     }
   }
 
   componentDidMount(){
-    this.showGraph();
+    this.props.dispatch({
+      type: `${namespace}/getClaimsAndDebtsCollection`,
+      callback: (data)=>{
+        if (data){
+          this.setState({
+            claimsGroup:data.claimsGroup,
+            debtGroup:data.debtGroup,
+            sumClaim:data.sumClaim,
+            sumDebt:data.sumDebt,
+            maxClaim:data.maxClaim,
+            maxDebt:data.maxDebt
+          });
+          this.showGraph();
+        }
+      }
+    })
+
   }
 
   showGraph = () =>{

@@ -3,16 +3,16 @@ import { stringify } from "qs";
 import request from "@/utils/request";
 
 
-// http://localhost:8083/userClaimsAndDebts/selectAll
+// http://localhost:8083/claimsAndDebt/selectAll
 export async function selectClaimsAndDebts(params) {
-  return request(`/api/friday/equity/userClaimsAndDebts/selectAll?${stringify(params)}`,{
+  return request(`/api/friday/equity/claimsAndDebt/selectAll?${stringify(params)}`,{
     method:"GET"
   });
 }
 
 export async function updateClaimsAndDebts(params) {
-  return request(`/api/friday/equity/userClaimsAndDebts/update`, {
-    method: "POST",
+  return request(`/api/friday/equity/claimsAndDebt/update`, {
+    method: "PUT",
     headers: {
       'content-type': 'application/json'
     },
@@ -21,7 +21,7 @@ export async function updateClaimsAndDebts(params) {
 }
 
 export async function insertClaimsAndDebts(params) {
-  return request(`/api/friday/equity/userClaimsAndDebts/insert`, {
+  return request(`/api/friday/equity/claimsAndDebt/insert`, {
     method: "POST",
     headers: {
       'content-type': 'application/json'
@@ -32,19 +32,19 @@ export async function insertClaimsAndDebts(params) {
 
 
 export async function deleteClaimsAndDebts(params) {
-  return request(`/api/friday/equity/userClaimsAndDebts/delete?${stringify(params)}`, {
+  return request(`/api/friday/equity/claimsAndDebt/delete?${stringify(params)}`, {
     method: "GET"
   });
 }
 
 export async function findClaimsAndDebtsTypeName() {
-  return request(`/api/friday/equity/userClaimsAndDebts/findType`, {
+  return request(`/api/friday/equity/claimsAndDebt/getClaimsAndDebtsCollection?${stringify(params)}`, {
     method: "GET"
   });
 }
 
-export async function getClaimsAndDebtsCollection(params) {
-  return request(`/api/friday/equity/userClaimsAndDebts/getClaimsAndDebtsCollection?${stringify(params)}`, {
+export async function getClaimsAndDebtsCollection() {
+  return request(`/api/friday/equity/claimsAndDebt/getClaimsAndDebtsCollection`, {
     method: "GET"
   });
 }
