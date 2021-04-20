@@ -425,7 +425,7 @@ class AssetsIndexHead extends React.Component{
           <Descriptions.Item label="每月应付按揭费用">{this.state.monthCost}</Descriptions.Item>
         </Descriptions>
 
-        <div style={{background:'#ffffff',padding:'5%'}}>
+        <div style={{background:'#ffffff',padding:'0 5%'}}>
           <Row style={{ fontSize: '14px' }}>
             <Col span={20}>
               <Button

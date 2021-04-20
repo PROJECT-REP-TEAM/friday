@@ -22,7 +22,7 @@ public class WorkingSchedule {
 //    @Scheduled(cron = "0 0 23 ? * MON-FRI")
 //    public void getUnfilledPersons(){
 //        log.info("开始记录");
-//        String dateString = TimeUtils.getCurrentDateString("yyyyMMdd");
+//        String dateString = TimeUtils.getCurrentDateString("yy yyMMdd");
 //        List<UserWorkHours> todayUnfilled = null;
 //        try {
 //            todayUnfilled = userWorkHoursService.getTodayUnfilled(dateString);

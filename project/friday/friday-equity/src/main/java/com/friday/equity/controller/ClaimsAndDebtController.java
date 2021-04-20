@@ -66,7 +66,6 @@ public class ClaimsAndDebtController {
         map.put("count",allData.getTotal());
         map.put("data",allData.getList());
         return ResponseEntity.ok(map);
-
     }
 
 

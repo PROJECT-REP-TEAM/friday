@@ -42,13 +42,15 @@ export default class ClaimsAndDebtsIndex extends React.Component{
       type: `${namespace}/getClaimsAndDebtsCollection`,
       callback: (data)=>{
         if (data){
+          let cadStatus = this.state.sumClaim - this.state.sumDebt >0 ? '良好':'较差';
           this.setState({
             claimsGroup:data.claimsGroup,
             debtGroup:data.debtGroup,
             sumClaim:data.sumClaim,
             sumDebt:data.sumDebt,
             maxClaim:data.maxClaim,
-            maxDebt:data.maxDebt
+            maxDebt:data.maxDebt,
+            cadStatus:cadStatus
           });
           this.showGraph();
         }
@@ -86,16 +88,7 @@ export default class ClaimsAndDebtsIndex extends React.Component{
               show: 'true'
             }
           },
-          data: [
-            {value: 40, name: 'rose 1'},
-            {value: 38, name: 'rose 2'},
-            {value: 32, name: 'rose 3'},
-            {value: 30, name: 'rose 4'},
-            {value: 28, name: 'rose 5'},
-            {value: 26, name: 'rose 6'},
-            {value: 22, name: 'rose 7'},
-            {value: 18, name: 'rose 8'}
-          ]
+          data: this.state.claimsGroup
         }
       ]
     });
@@ -125,16 +118,7 @@ export default class ClaimsAndDebtsIndex extends React.Component{
               show: 'true'
             }
           },
-          data: [
-            {value: 40, name: 'rose 1'},
-            {value: 38, name: 'rose 2'},
-            {value: 32, name: 'rose 3'},
-            {value: 30, name: 'rose 4'},
-            {value: 28, name: 'rose 5'},
-            {value: 26, name: 'rose 6'},
-            {value: 22, name: 'rose 7'},
-            {value: 18, name: 'rose 8'}
-          ]
+          data: this.state.debtGroup
         }
       ]
     });
@@ -148,13 +132,13 @@ export default class ClaimsAndDebtsIndex extends React.Component{
           <div id="claims" style={{width:'50%',height : '22rem',marginTop : '1rem', float : 'left',minWidth:'260px'}}></div>
         </div>
         <Divider plain>Text</Divider>
-        <Descriptions title="User Info" style={{marginTop:'1.5rem'}}>
-          <Descriptions.Item label="债务总额">Zhou Maomao</Descriptions.Item>
-          <Descriptions.Item label="债权总额">1810000000</Descriptions.Item>
-          <Descriptions.Item label="债务债权差额">Hangzhou, Zhejiang</Descriptions.Item>
-          <Descriptions.Item label="最高债务额">empty</Descriptions.Item>
-          <Descriptions.Item label="最高债权额">No. 18, Wantang Road</Descriptions.Item>
-          <Descriptions.Item label="当前财务状况">良好</Descriptions.Item>
+        <Descriptions title="债务总状况" style={{marginTop:'1.5rem'}}>
+          <Descriptions.Item label="债务总额">{this.state.sumDebt}</Descriptions.Item>
+          <Descriptions.Item label="债权总额">{this.state.sumClaim}</Descriptions.Item>
+          <Descriptions.Item label="债务债权差额">{this.state.sumClaim - this.state.sumDebt}</Descriptions.Item>
+          <Descriptions.Item label="最高债务额">{this.state.maxDebt}</Descriptions.Item>
+          <Descriptions.Item label="最高债权额">{this.state.maxClaim}</Descriptions.Item>
+          <Descriptions.Item label="当前财务状况">{this.state.cadStatus}</Descriptions.Item>
         </Descriptions>
 
       </div>
