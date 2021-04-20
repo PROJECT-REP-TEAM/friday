@@ -8,8 +8,7 @@
 
 ## 架构图
 
-![3-](F:\毕设\图\图3-1.jpg)
-
+![架构图](https://images.gitee.com/uploads/images/2021/0420/154740_8c7c2bc5_7419849.jpeg "图3-1.jpg")
 版本介绍：
 
 B/S结构服务运行环境
@@ -54,31 +53,31 @@ B/S结构服务运行环境
 
 支出展示：
 
-![4-1](F:\毕设\图\图4-11.png)
+![支出展示](https://images.gitee.com/uploads/images/2021/0420/154818_6e46f0cc_7419849.png "图4-11.png")
 
 支出详情：
 
-![4-1](F:\毕设\图\图4-12.png)
+![支出详情](https://images.gitee.com/uploads/images/2021/0420/154846_8ee73509_7419849.png "图4-12.png")
 
 股市排行：
 
-![4-1](F:\毕设\图\图4-15.png)
+![股市排行](https://images.gitee.com/uploads/images/2021/0420/154918_8d25607b_7419849.png "图4-15.png")
 
 股市分类：
 
-![4-1](F:\毕设\图\图4-16.png)
+![股市分类](https://images.gitee.com/uploads/images/2021/0420/154937_0d13505a_7419849.png "图4-16.png")
 
 股票详情：
 
-![4-1](F:\毕设\图\图4-17.png)
+![股市分类](https://images.gitee.com/uploads/images/2021/0420/154949_a10ee124_7419849.png "图4-17.png")
 
 资产统计：
 
-![4-2](F:\毕设\图\图4-20.png)
+![资产统计](https://images.gitee.com/uploads/images/2021/0420/155009_8539a524_7419849.png "图4-20.png")
 
 负债情况：
 
-![4-2](F:\毕设\图\图4-22.png)
+![负债情况](https://images.gitee.com/uploads/images/2021/0420/155023_bec5980d_7419849.png "图4-22.png")
 
 
 
