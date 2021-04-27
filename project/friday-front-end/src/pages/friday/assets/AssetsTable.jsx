@@ -71,7 +71,7 @@ export default class AssetsTable extends React.Component{
   render() {
     return(
      <div style={{background:'#ffffff',padding:'5%'}}>
-       <Descriptions title="奥迪A4L" layout="vertical" bordered>
+       <Descriptions title={this.state.assetsName} layout="vertical" bordered>
          <Descriptions.Item label="资产id">{this.state.assetsId}</Descriptions.Item>
          <Descriptions.Item label="资产名">{this.state.assetsName}</Descriptions.Item>
          <Descriptions.Item label="所在地">{this.state.assetsLocation}</Descriptions.Item>
