@@ -181,5 +181,8 @@ B/S结构服务运行环境
 
 ## 开发部署
 请参考羊哥（codesheep）的B站视频  主页链接：https://space.bilibili.com/384068749/
-windows上： https://www.bilibili.com/video/BV1y4411p74E
-linux上：https://www.bilibili.com/video/BV1uK411p7Bp
+
+
+windows上部署（参考视频）： https://www.bilibili.com/video/BV1y4411p74E
+
+linux上部署（参考视频）：https://www.bilibili.com/video/BV1uK411p7Bp
