@@ -1,4 +1,5 @@
 ## Friday论文文档与系统无偿供大家使用，您的star就是我前进的动力
+https://gitee.com/Ezer_Wu/friday
 
 # Firday分布式家庭理财系统开发文档
 
